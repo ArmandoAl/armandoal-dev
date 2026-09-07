@@ -1,0 +1,98 @@
+---
+import Ripple from '@core/widgets/Ripple.astro';
+import AppIcon from '@core/widgets/AppIcon.astro';
+import { getUiCopy } from '@core/utils/i18n';
+import { getNavigationItems, type AppRoute, type Language } from './navigation';
+
+interface Props {
+  lang: Language;
+  activeRoute: AppRoute;
+  canonicalPath: string;
+  alternatePath: string;
+}
+
+const { lang, activeRoute, canonicalPath, alternatePath } = Astro.props;
+const items = getNavigationItems(lang);
+const ui = getUiCopy(lang);
+---
+
+<span class="top-nav-sentinel" data-top-nav-sentinel aria-hidden="true"></span>
+<nav class="top-nav" data-nav-indicator aria-label={ui.accessibility.primaryNavigation}>
+  <span class="nav-indicator" aria-hidden="true"></span>
+  <a class="top-nav__owner md-state-layer" href={items[0].href} aria-label="Armando Alvarado — Home">
+    <span class="md-title-medium">Armando Alvarado</span>
+    <span class="md-label-small">Flutter developer</span>
+  </a>
+
+  <div class="top-nav__items">
+    {items.map((item) => (
+      <Ripple style="border-radius: 999px; z-index: 1; --md-ripple-color: var(--md-on-surface);">
+        <a
+          class="top-nav__item md-state-layer"
+          data-nav-item
+          href={item.href}
+          aria-current={activeRoute === item.route ? 'page' : undefined}
+        >
+          <AppIcon name={item.icon} size={20} state={activeRoute === item.route ? 'active' : 'inactive'} />
+          <span>{item.label}</span>
+        </a>
+      </Ripple>
+    ))}
+  </div>
+
+  <div class="top-nav__actions">
+    <button class="icon-button md-state-layer" type="button" data-theme-toggle aria-label={ui.actions.toggleTheme} title={ui.actions.toggleTheme}>
+      <AppIcon name="theme" size={20} state="inactive" />
+    </button>
+    <div class="language-switcher" aria-label={ui.actions.changeLanguage}>
+      <a class="md-state-layer" href={lang === 'en' ? canonicalPath : alternatePath} aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+      <a class="md-state-layer" href={lang === 'es' ? canonicalPath : alternatePath} aria-current={lang === 'es' ? 'true' : undefined}>ES</a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .top-nav-sentinel { height: 1px; left: 0; pointer-events: none; position: absolute; top: 0; width: 1px; }
+
+  .top-nav {
+    align-items: center;
+    background: var(--md-surface-container);
+    display: none;
+    gap: 20px;
+    height: 64px;
+    left: 0;
+    padding: 0 24px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    transition: background-color var(--md-duration-short) var(--md-easing-standard);
+    view-transition-name: top-nav;
+    z-index: 20;
+  }
+
+  .top-nav--elevated { background: var(--md-surface-container-high); }
+  .top-nav__owner { color: var(--md-on-surface); display: grid; flex: 0 0 auto; line-height: 1.1; padding: 6px 8px; text-decoration: none; }
+  .top-nav__owner .md-label-small { color: var(--md-on-surface-variant); }
+  .top-nav__items { display: flex; gap: 4px; margin-left: auto; }
+  .top-nav__item { align-items: center; border-radius: 999px; color: var(--md-on-surface); display: flex; font: 500 14px/20px var(--md-font-family); gap: 8px; height: 48px; padding: 0 14px; text-decoration: none; }
+  .top-nav__item[aria-current='page'] { color: var(--md-on-primary-container); }
+  .top-nav__item[aria-current='page'] { --app-icon-active-color: var(--md-on-primary-container); }
+  .top-nav__actions { align-items: center; display: flex; flex: 0 0 auto; gap: 8px; }
+
+  @media (min-width: 840px) {
+    .top-nav { display: flex; }
+  }
+</style>
+
+<script>
+  let observer: IntersectionObserver | undefined;
+
+  document.addEventListener('astro:page-load', () => {
+    observer?.disconnect();
+    const sentinel = document.querySelector('[data-top-nav-sentinel]');
+    const nav = document.querySelector('.top-nav');
+    if (!sentinel || !nav) return;
+    observer = new IntersectionObserver(([entry]) => nav.classList.toggle('top-nav--elevated', !entry.isIntersecting));
+    observer.observe(sentinel);
+  });
+</script>

@@ -1,0 +1,65 @@
+---
+interface Props {
+  label: string;
+  value: string | number;
+  delay?: number;
+}
+
+const { label, value, delay = 0 } = Astro.props;
+---
+
+<article class="metric-card md-elevation-2">
+  <strong class="md-display-small md-metric-value" style={`--md-metric-delay: ${delay}ms;`}>{value}</strong>
+  <span class="md-label-large">{label}</span>
+</article>
+
+<style>
+  .metric-card { background: var(--md-surface-container); border-left: 3px solid var(--case-accent); border-radius: 20px; display: grid; gap: 8px; min-height: 148px; padding: 24px; }
+  strong { color: var(--case-accent); }
+  span { color: var(--md-on-surface-variant); }
+</style>
+
+<script is:inline>
+  (() => {
+    const card = document.currentScript?.previousElementSibling;
+    const strong = card instanceof HTMLElement ? card.querySelector('strong') : null;
+    if (!card || !strong) return;
+    const original = strong.textContent ?? '';
+    const parsed = original.match(/^(.*?)(\d+)(.*)$/);
+    if (!parsed || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const prefix = parsed[1];
+    const target = Number(parsed[2]);
+    const suffix = parsed[3];
+    const ax = 3 * 0.2 - 3 * 0 + 1, bx = 3 * 0 - 6 * 0.2, cx = 3 * 0.2;
+    const ay = 3 * 0 - 3 * 1 + 1, by = 3 * 1 - 6 * 0, cy = 3 * 0;
+    const xAt = (t) => ((ax * t + bx) * t + cx) * t;
+    const yAt = (t) => ((ay * t + by) * t + cy) * t;
+    const dxAt = (t) => (3 * ax * t + 2 * bx) * t + cx;
+    const ease = (x) => {
+      let t = x;
+      for (let i = 0; i < 8; i++) {
+        const d = dxAt(t);
+        if (Math.abs(d) < 1e-6) break;
+        t = Math.max(0, Math.min(1, t - (xAt(t) - x) / d));
+      }
+      return yAt(t);
+    };
+    const render = (n) => { strong.textContent = prefix + n + suffix; };
+    render(0);
+    const animate = () => {
+      const start = performance.now();
+      const frame = (now) => {
+        const t = Math.min(1, (now - start) / 900);
+        render(Math.round(target * ease(t)));
+        if (t < 1) requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    };
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      observer.disconnect();
+      animate();
+    }, { threshold: 0.4 });
+    observer.observe(card);
+  })();
+</script>

@@ -1,0 +1,52 @@
+---
+const { class: className, ...attributes } = Astro.props;
+---
+
+<span class:list={['md-ripple', className]} data-ripple {...attributes}>
+  <slot />
+</span>
+
+<style is:global>
+  .md-ripple {
+    border-radius: inherit;
+    display: inline-grid;
+    isolation: isolate;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .md-ripple-ink {
+    animation: md-ripple var(--md-duration-long) var(--md-easing-standard) forwards;
+    background: var(--md-ripple-color, currentColor);
+    border-radius: 50%;
+    opacity: 0.2;
+    pointer-events: none;
+    position: absolute;
+    transform: scale(0);
+    z-index: 1;
+  }
+
+  @keyframes md-ripple {
+    to { opacity: 0; transform: scale(1); }
+  }
+</style>
+
+<script>
+  document.addEventListener('pointerdown', (event) => {
+    if (!(event.target instanceof Element) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const container = event.target.closest<HTMLElement>('[data-ripple]');
+    if (!container) return;
+    const bounds = container.getBoundingClientRect();
+    const x = event.clientX - bounds.left;
+    const y = event.clientY - bounds.top;
+    const radius = Math.hypot(
+      Math.max(x, bounds.width - x),
+      Math.max(y, bounds.height - y),
+    );
+    const ink = document.createElement('span');
+    ink.className = 'md-ripple-ink';
+    ink.style.cssText = `width:${radius * 2}px;height:${radius * 2}px;left:${x - radius}px;top:${y - radius}px`;
+    container.append(ink);
+    ink.addEventListener('animationend', () => ink.remove(), { once: true });
+  }, { passive: true });
+</script>

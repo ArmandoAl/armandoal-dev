@@ -1,0 +1,68 @@
+---
+import Ripple from '@core/widgets/Ripple.astro';
+import AppIcon from '@core/widgets/AppIcon.astro';
+import { getUiCopy } from '@core/utils/i18n';
+import { getNavigationItems, type AppRoute, type Language } from './navigation';
+
+interface Props {
+  lang: Language;
+  activeRoute: AppRoute;
+}
+
+const { lang, activeRoute } = Astro.props;
+const items = getNavigationItems(lang);
+---
+
+<nav class="navigation-rail" data-nav-indicator aria-label={getUiCopy(lang).accessibility.primaryNavigation}>
+  <span class="nav-indicator" aria-hidden="true"></span>
+  {items.map((item) => (
+    <Ripple style="border-radius: 20px; width: 64px; z-index: 1; --md-ripple-color: var(--md-on-surface);">
+      <a
+        class:list={['navigation-rail__item', 'md-state-layer', { active: activeRoute === item.route }]}
+        data-nav-item
+        href={item.href}
+        aria-current={activeRoute === item.route ? 'page' : undefined}
+      >
+        <AppIcon name={item.icon} size={24} state={activeRoute === item.route ? 'active' : 'inactive'} />
+        <span>{item.label}</span>
+      </a>
+    </Ripple>
+  ))}
+</nav>
+
+<style>
+  .navigation-rail {
+    align-items: center;
+    background: var(--md-surface-container-low);
+    bottom: 0;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    left: 0;
+    padding-top: 88px;
+    position: fixed;
+    top: 0;
+    width: 88px;
+    z-index: 20;
+    view-transition-name: nav-rail;
+  }
+
+  .navigation-rail__item {
+    align-items: center;
+    border-radius: 20px;
+    color: var(--md-on-surface);
+    display: flex;
+    flex-direction: column;
+    font: 500 11px/16px var(--md-font-family);
+    gap: 4px;
+    min-height: 64px;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  .navigation-rail__item[aria-current='page'] { --app-icon-active-color: var(--md-on-primary-container); color: var(--md-on-primary-container); }
+
+  @media (min-width: 600px) and (max-width: 839px) {
+    .navigation-rail { display: flex; }
+  }
+</style>

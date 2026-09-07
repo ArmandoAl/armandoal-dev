@@ -1,0 +1,89 @@
+:root {
+  --md-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --md-duration-short: 200ms;
+  --md-duration-medium: 300ms;
+  --md-duration-long: 400ms;
+  --md-nav-transition-duration: 300ms;
+}
+
+@keyframes md-content-enter {
+  from { opacity: 0; transform: translateY(12px); }
+}
+
+.md-enter {
+  animation: md-content-enter var(--md-duration-medium) var(--md-easing-emphasized-decelerate);
+  animation-fill-mode: both;
+}
+
+.md-enter-2 { animation-delay: 60ms; }
+.md-enter-3 { animation-delay: 120ms; }
+.md-enter-4 { animation-delay: 180ms; }
+
+@keyframes md-metric-enter {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
+.md-metric-value {
+  animation: md-metric-enter var(--md-duration-medium) var(--md-easing-emphasized-decelerate);
+  animation-delay: var(--md-metric-delay, 0ms);
+  animation-fill-mode: both;
+}
+
+@keyframes md-reveal {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.md-reveal,
+.md-reveal-stagger > * {
+  opacity: 1;
+}
+
+@supports (animation-timeline: view()) {
+  .md-reveal {
+    animation: md-reveal linear both;
+    animation-range: entry 10% cover 35%;
+    animation-timeline: view();
+  }
+
+  .md-reveal-stagger > * {
+    animation: md-reveal linear both;
+    animation-delay: calc(var(--i, 0) * 60ms);
+    animation-range: entry 10% cover 35%;
+    animation-timeline: view();
+  }
+}
+
+@supports not (animation-timeline: view()) {
+  .md-reveal,
+  .md-reveal-stagger > * {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --md-duration-short: 0ms;
+    --md-duration-medium: 0ms;
+    --md-duration-long: 0ms;
+    --md-nav-transition-duration: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+
+  .md-reveal,
+  .md-reveal-stagger > * {
+    opacity: 1;
+    transform: none;
+  }
+}

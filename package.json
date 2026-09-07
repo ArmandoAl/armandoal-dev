@@ -10,7 +10,9 @@
     "check": "astro check"
   },
   "dependencies": {
-    "astro": "^7.3.1"
+    "@iconify-json/line-md": "^1.2.16",
+    "astro": "^7.3.1",
+    "astro-icon": "^1.2.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",

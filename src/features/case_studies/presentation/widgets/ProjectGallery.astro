@@ -1,0 +1,127 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+type Gallery = NonNullable<CollectionEntry<'caseStudies'>['data']['gallery']>;
+interface Props { gallery?: Gallery; }
+
+const { gallery } = Astro.props;
+const mobile = gallery?.filter(({ kind }) => kind === 'mobile') ?? [];
+const desktop = gallery?.filter(({ kind }) => kind === 'desktop') ?? [];
+const mobileGroups = Array.from({ length: Math.ceil(mobile.length / 3) }, (_, index) => mobile.slice(index * 3, index * 3 + 3));
+---
+
+{gallery?.length ? (
+  <div class="project-gallery">
+    {mobileGroups.map((group, groupIndex) => (
+      <div class="project-gallery__mobile" aria-label="Mobile application screenshots">
+        {group.map((image, imageIndex) => {
+          const id = `gallery-mobile-${groupIndex}-${imageIndex}`;
+          return (
+            <>
+              <figure class:list={['project-gallery__mobile-shot', {
+                'project-gallery__mobile-shot--left': group.length > 1 && imageIndex === 0,
+                'project-gallery__mobile-shot--center': group.length === 3 && imageIndex === 1,
+                'project-gallery__mobile-shot--right': group.length > 1 && imageIndex === group.length - 1,
+              }]}>
+                <button type="button" data-gallery-open={id} aria-label={image.caption ?? image.alt}>
+                  <Image src={image.src} alt={image.alt} width={420} height={910} widths={[280, 420]} sizes="(max-width: 599px) 88vw, 420px" format="webp" loading="lazy" decoding="async" />
+                </button>
+                {image.caption && <figcaption class="md-body-small">{image.caption}</figcaption>}
+              </figure>
+              <dialog id={id} class="project-gallery__dialog">
+                <button class="project-gallery__close md-label-large" type="button" data-gallery-close aria-label="Close">×</button>
+                <Image src={image.src} alt={image.alt} width={420} height={910} widths={[280, 420]} sizes="min(90vw, 420px)" format="webp" loading="lazy" decoding="async" />
+                {image.caption && <p class="md-body-medium">{image.caption}</p>}
+              </dialog>
+            </>
+          );
+        })}
+      </div>
+    ))}
+
+    {desktop.map((image, index) => {
+      const id = `gallery-desktop-${index}`;
+      return (
+        <>
+          <figure class="project-gallery__desktop">
+            <button type="button" data-gallery-open={id} aria-label={image.caption ?? image.alt}>
+              <Image src={image.src} alt={image.alt} width={1100} height={825} widths={[640, 880, 1100]} sizes="(max-width: 839px) 100vw, 880px" format="webp" loading="lazy" decoding="async" />
+            </button>
+            {image.caption && <figcaption class="md-body-small">{image.caption}</figcaption>}
+          </figure>
+          <dialog id={id} class="project-gallery__dialog">
+            <button class="project-gallery__close md-label-large" type="button" data-gallery-close aria-label="Close">×</button>
+            <Image src={image.src} alt={image.alt} width={1100} height={825} widths={[640, 880, 1100]} sizes="min(94vw, 1100px)" format="webp" loading="lazy" decoding="async" />
+            {image.caption && <p class="md-body-medium">{image.caption}</p>}
+          </dialog>
+        </>
+      );
+    })}
+  </div>
+) : null}
+
+<style>
+  .project-gallery { display: grid; gap: 48px; padding-block: 48px; }
+  .project-gallery__mobile { align-items: center; display: flex; justify-content: center; position: relative; }
+  .project-gallery__mobile::before { background: radial-gradient(circle, color-mix(in srgb, var(--case-accent) 18%, transparent), transparent 68%); content: ''; inset: -15%; pointer-events: none; position: absolute; }
+  .project-gallery__mobile-shot { margin: 0; position: relative; width: min(38%, 420px); }
+  .project-gallery__mobile-shot--left { margin-right: -4%; transform: rotate(-3deg); }
+  .project-gallery__mobile-shot--center { margin-right: -4%; transform: scale(1.05); z-index: 2; }
+  .project-gallery__mobile-shot--right { transform: rotate(3deg); }
+  button { background: none; border: 0; color: inherit; cursor: zoom-in; display: block; padding: 0; width: 100%; }
+  figure img { border: 1px solid var(--md-outline-variant); display: block; height: auto; width: 100%; }
+  .project-gallery__mobile img { border-radius: 24px; }
+  .project-gallery__desktop { width: 100%; }
+  .project-gallery__desktop img { border-radius: 16px; }
+  figcaption { color: var(--md-on-surface-variant); margin-top: 12px; text-align: center; }
+
+  .project-gallery__dialog { background: var(--md-surface-container-high); border: 1px solid var(--md-outline-variant); border-radius: 24px; color: var(--md-on-surface); max-height: 94vh; max-width: min(94vw, 1160px); padding: 48px 24px 20px; }
+  .project-gallery__dialog::backdrop { background: color-mix(in srgb, var(--md-surface) 82%, transparent); }
+  .project-gallery__dialog img { border-radius: 16px; display: block; height: auto; max-height: calc(94vh - 92px); max-width: 100%; object-fit: contain; width: auto; }
+  .project-gallery__dialog p { color: var(--md-on-surface-variant); margin: 12px 0 0; text-align: center; }
+  .project-gallery__close { background: var(--md-surface-container-highest); border: 1px solid var(--md-outline-variant); border-radius: 999px; color: var(--md-on-surface); cursor: pointer; height: 36px; position: absolute; right: 10px; top: 8px; width: 36px; }
+
+  @media (max-width: 599px) {
+    .project-gallery { gap: 24px; }
+    .project-gallery__mobile { display: grid; gap: 20px; }
+    .project-gallery__mobile::before { display: none; }
+    .project-gallery__mobile-shot { margin: 0 auto; transform: none; width: min(88%, 420px); }
+  }
+</style>
+
+{gallery?.length && (
+  <script is:inline>
+    {`(() => {
+      const root = document.currentScript?.previousElementSibling;
+      if (!root) return;
+      const openers = new WeakMap();
+      root.addEventListener('click', (event) => {
+        if (!(event.target instanceof Element)) return;
+        const open = event.target.closest('[data-gallery-open]');
+        if (open) {
+          const dialog = document.getElementById(open.dataset.galleryOpen || '');
+          if (!dialog || typeof dialog.showModal !== 'function') return;
+          const source = open.querySelector('img');
+          const target = dialog.querySelector('img');
+          openers.set(dialog, open);
+          const show = () => {
+            source?.style.removeProperty('view-transition-name');
+            target?.style.setProperty('view-transition-name', 'project-gallery-hero');
+            dialog.showModal();
+          };
+          source?.style.setProperty('view-transition-name', 'project-gallery-hero');
+          if (document.startViewTransition) document.startViewTransition(show).finished.finally(() => target?.style.removeProperty('view-transition-name'));
+          else {
+            show();
+            target?.style.removeProperty('view-transition-name');
+          }
+          return;
+        }
+        const dialog = event.target.closest('dialog[open]');
+        if (dialog && (event.target === dialog || event.target.closest('[data-gallery-close]'))) dialog.close();
+      });
+      root.addEventListener('close', (event) => openers.get(event.target)?.focus(), true);
+    })();`}
+  </script>
+)}

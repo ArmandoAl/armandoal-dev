@@ -1,0 +1,31 @@
+---
+import AppShell from '@app/shell/AppShell.astro';
+import { getAll } from '@features/case_studies/data/repositories/case_study_repository';
+import CaseStudyCard from '../widgets/CaseStudyCard.astro';
+import { getUiCopy, type Locale } from '@core/utils/i18n';
+import { ROUTE_NAMES } from '@app/router/route_names';
+import NextSectionCard from '@core/widgets/NextSectionCard.astro';
+
+interface Props { lang: Locale; }
+
+const { lang } = Astro.props;
+const studies = await getAll(lang);
+const ui = getUiCopy(lang);
+---
+
+<AppShell title={ui.sections.allWork} description={ui.sections.featuredWork} {lang} activeRoute="work">
+  <header class="md-enter md-enter-1">
+    <p class="md-label-large">{ui.nav.work}</p>
+    <h1 class="md-display-medium">{ui.sections.allWork}</h1>
+  </header>
+  <div class="case-grid md-enter md-enter-2">
+    {studies.map((study) => <CaseStudyCard {study} {lang} />)}
+  </div>
+  <div class="md-enter md-enter-3"><NextSectionCard href={ROUTE_NAMES[lang].about} label={ui.nextSection.label} title={ui.nav.about} description={ui.nextSection.about} /></div>
+</AppShell>
+
+<style>
+  header { padding-block: 40px 48px; }
+  header p { color: var(--md-primary); margin-bottom: 12px; text-transform: uppercase; }
+  .case-grid { display: grid; gap: 24px; }
+</style>

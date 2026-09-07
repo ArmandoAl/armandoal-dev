@@ -1,0 +1,43 @@
+.md-state-layer {
+  --md-state-hover: 0.08;
+  --md-state-focus: 0.1;
+  --md-state-pressed: 0.1;
+  --md-state-dragged: 0.16;
+  isolation: isolate;
+  position: relative;
+}
+
+.md-state-layer::before {
+  background: currentColor;
+  border-radius: inherit;
+  content: '';
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  transition: opacity var(--md-duration-short) var(--md-easing-standard);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .md-state-layer:hover::before {
+    opacity: var(--md-state-hover);
+  }
+}
+
+.md-state-layer:focus-visible::before {
+  opacity: var(--md-state-focus);
+}
+
+.md-state-layer:active::before {
+  opacity: var(--md-state-pressed);
+}
+
+.md-state-layer[data-dragged='true']::before {
+  opacity: var(--md-state-dragged);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .md-state-layer::before {
+    transition: none;
+  }
+}

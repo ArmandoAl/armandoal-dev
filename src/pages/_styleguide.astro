@@ -1,0 +1,101 @@
+---
+import Ripple from '@core/widgets/Ripple.astro';
+import { THEME_INIT_SCRIPT } from '@core/theme/theme';
+import '@core/theme/index.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Material 3 style guide</title>
+    <script is:inline set:html={THEME_INIT_SCRIPT}></script>
+  </head>
+  <body>
+    <main>
+      <h1 class="md-display-small">Material 3 style guide</h1>
+
+      <section>
+        <h2 class="md-headline-medium">Type scale</h2>
+        <div class="type-scale">
+          <p class="md-display-large">Display large</p>
+          <p class="md-display-medium">Display medium</p>
+          <p class="md-display-small">Display small</p>
+          <p class="md-headline-large">Headline large</p>
+          <p class="md-headline-medium">Headline medium</p>
+          <p class="md-headline-small">Headline small</p>
+          <p class="md-title-large">Title large</p>
+          <p class="md-title-medium">Title medium</p>
+          <p class="md-title-small">Title small</p>
+          <p class="md-body-large">Body large</p>
+          <p class="md-body-medium">Body medium</p>
+          <p class="md-body-small">Body small</p>
+          <p class="md-label-large">Label large</p>
+          <p class="md-label-medium">Label medium</p>
+          <p class="md-label-small">Label small</p>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="md-headline-medium">Elevation</h2>
+        <div class="grid elevation-grid">
+          <article class="md-elevation-0">Level 0</article>
+          <article class="md-elevation-1">Level 1</article>
+          <article class="md-elevation-2">Level 2</article>
+          <article class="md-elevation-3">Level 3</article>
+          <article class="md-elevation-4">Level 4</article>
+          <article class="md-elevation-5">Level 5</article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="md-headline-medium">Color palette</h2>
+        <div class="grid palette">
+          <article style="--swatch:var(--md-surface)">surface</article>
+          <article style="--swatch:var(--md-surface-container-low)">surface-container-low</article>
+          <article style="--swatch:var(--md-surface-container)">surface-container</article>
+          <article style="--swatch:var(--md-surface-container-high)">surface-container-high</article>
+          <article style="--swatch:var(--md-surface-container-highest)">surface-container-highest</article>
+          <article style="--swatch:var(--md-on-surface)">on-surface</article>
+          <article style="--swatch:var(--md-on-surface-variant)">on-surface-variant</article>
+          <article style="--swatch:var(--md-outline)">outline</article>
+          <article style="--swatch:var(--md-outline-variant)">outline-variant</article>
+          <article style="--swatch:var(--md-primary)">primary</article>
+          <article style="--swatch:var(--md-on-primary)">on-primary</article>
+          <article style="--swatch:var(--md-primary-container)">primary-container</article>
+          <article style="--swatch:var(--md-on-primary-container)">on-primary-container</article>
+          <article style="--swatch:var(--md-error)">error</article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="md-headline-medium">Ripple</h2>
+        <div class="actions">
+          <Ripple class="button-shell filled"><button class="md-state-layer" type="button">Filled</button></Ripple>
+          <Ripple class="button-shell tonal"><button class="md-state-layer" type="button">Tonal</button></Ripple>
+          <Ripple class="button-shell outlined"><button class="md-state-layer" type="button">Outlined</button></Ripple>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  main { margin: auto; max-width: 1120px; padding: 48px 24px 96px; }
+  section { margin-top: 56px; }
+  section > h2 { margin-bottom: 24px; }
+  .type-scale { display: grid; gap: 16px; overflow-wrap: anywhere; }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .elevation-grid article { border: 1px solid var(--md-outline-variant); border-radius: 16px; min-height: 112px; padding: 20px; }
+  .palette article { background: var(--md-surface-container-low); border-radius: 12px; color: var(--md-on-surface-variant); padding: 16px; }
+  .palette article::before { background: var(--swatch); border: 1px solid var(--md-outline-variant); border-radius: 8px; content: ''; display: block; height: 64px; margin-bottom: 12px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .button-shell { border-radius: 999px; color: var(--md-primary); }
+  button { border: 0; border-radius: inherit; color: inherit; cursor: pointer; font: 500 14px/20px var(--md-font-family); letter-spacing: 0.1px; min-height: 40px; padding: 10px 24px; }
+  .filled { --md-ripple-color: var(--md-on-primary); }
+  .filled button { background: var(--md-primary); color: var(--md-on-primary); }
+  .tonal { --md-ripple-color: var(--md-on-primary-container); }
+  .tonal button { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+  .outlined button { background: transparent; border: 1px solid var(--md-outline); }
+</style>

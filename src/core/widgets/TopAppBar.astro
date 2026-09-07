@@ -1,0 +1,29 @@
+---
+import Ripple from './Ripple.astro';
+import AppIcon from './AppIcon.astro';
+
+interface Props {
+  backHref: string;
+  backLabel: string;
+  title?: string;
+}
+
+const { backHref, backLabel, title } = Astro.props;
+---
+
+<div class="top-app-bar">
+  <Ripple style="border-radius: 50%; height: 48px; width: 48px; --md-ripple-color: var(--md-on-surface);">
+    <a class="top-app-bar__back md-state-layer" href={backHref} aria-label={backLabel}>
+      <AppIcon name="arrow-left" size={24} state="inactive" />
+    </a>
+  </Ripple>
+  {title && <span class="md-title-large">{title}</span>}
+</div>
+
+<style>
+  .top-app-bar { align-items: center; background: var(--md-surface); display: flex; gap: 4px; height: 64px; }
+  .top-app-bar__back { align-items: center; border-radius: 50%; color: var(--md-on-surface); display: flex; height: 48px; justify-content: center; width: 48px; }
+  @media (max-width: 599px) {
+    .top-app-bar { background: var(--md-surface-container); position: sticky; top: 0; z-index: 9; }
+  }
+</style>

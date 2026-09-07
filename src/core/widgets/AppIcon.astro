@@ -1,0 +1,55 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  name: string;
+  size: number | string;
+  state: 'active' | 'inactive';
+}
+
+const { name, size, state } = Astro.props;
+const dimension = typeof size === 'number' ? `${size}px` : size;
+const iconName = `line-md:${name}`;
+---
+
+<span class:list={['app-icon', `app-icon--${state}`, { 'app-icon--theme': name === 'theme' }]} style={`width:${dimension};height:${dimension}`} aria-hidden="true">
+  {name === 'theme' ? (
+    <>
+      <Icon class="app-icon__sun" name={'line-md:sunny'} width={size} height={size} is:inline />
+      <Icon class="app-icon__moon" name={'line-md:moon'} width={size} height={size} is:inline />
+    </>
+  ) : (
+    <Icon name={iconName as any} width={size} height={size} is:inline />
+  )}
+</span>
+
+<style is:global>
+  .app-icon { display: inline-grid; flex: 0 0 auto; place-items: center; }
+  .app-icon--inactive { color: var(--md-on-surface-variant); }
+  .app-icon--active { color: var(--app-icon-active-color, var(--md-primary)); }
+  .app-icon [data-icon] { display: block; height: 100%; width: 100%; }
+  .app-icon [data-icon] * { stroke-width: 1.5; }
+  .app-icon [stroke-dashoffset] { stroke-dashoffset: 0; }
+  .app-icon [opacity='0'] { opacity: 1; }
+  .app-icon--active [stroke-dasharray] { animation: app-icon-draw var(--md-duration-long) var(--md-easing-emphasized-decelerate); }
+
+  .app-icon--theme { position: relative; }
+  .app-icon--theme [data-icon] { inset: 0; position: absolute; transition: opacity var(--md-duration-long) var(--md-easing-standard), transform var(--md-duration-long) var(--md-easing-standard); }
+  .app-icon__moon { opacity: 0; transform: rotate(-45deg); }
+  [data-theme='dark'] .app-icon__sun { opacity: 0; transform: rotate(45deg); }
+  [data-theme='dark'] .app-icon__moon { opacity: 1; transform: rotate(0); }
+
+  @media (hover: hover) and (pointer: fine) {
+    :where(a, button):hover .app-icon [stroke-dasharray] { animation: app-icon-draw var(--md-duration-short) var(--md-easing-emphasized-decelerate); }
+  }
+
+  @keyframes app-icon-draw {
+    from { stroke-dashoffset: 100; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app-icon [data-icon], .app-icon [stroke-dasharray] { animation: none; transition: none; }
+    .app-icon [stroke-dashoffset] { stroke-dashoffset: 0; }
+    .app-icon [opacity='0'] { opacity: 1; }
+  }
+</style>

@@ -5,12 +5,21 @@ export const ROUTE_NAMES = {
     workDetail: (slug: string) => `/work/${slug}`,
     about: '/about',
     contact: '/contact',
+    notFound: '/404',
   },
   es: {
     home: '/es',
-    work: '/es/trabajo',
-    workDetail: (slug: string) => `/es/trabajo/${slug}`,
-    about: '/es/sobre-mi',
+    work: '/es/proyectos',
+    workDetail: (slug: string) => `/es/proyectos/${slug}`,
+    about: '/es/perfil',
     contact: '/es/contacto',
+    notFound: '/es/404',
   },
 } as const;
+
+export const CV_PATHS = {
+  en: '/cv/Armando_Alvarado_CV_EN.pdf',
+  es: '/cv/Armando_Alvarado_CV_ES.pdf',
+} as const;
+
+export const SITEMAP_PATH = '/sitemap.xml';

@@ -1,0 +1,167 @@
+---
+import AppShell from '@app/shell/AppShell.astro';
+import { ROUTE_NAMES } from '@app/router/route_names';
+import { getAll, getBySlug } from '@features/case_studies/data/repositories/case_study_repository';
+import { getUiCopy, type Locale } from '@core/utils/i18n';
+import TopAppBar from '@core/widgets/TopAppBar.astro';
+import { caseMetaName, caseTitleName } from '@core/utils/view_transition';
+import { caseAccentStyle } from '@core/theme/case_accents';
+import ProjectGallery from '../widgets/ProjectGallery.astro';
+
+interface Props { slug: string; lang: Locale; }
+
+const { slug, lang } = Astro.props;
+const study = await getBySlug(slug, lang);
+if (!study) throw new Error(`Missing case study: ${lang}/${slug}`);
+const { data } = study;
+const ui = getUiCopy(lang);
+const alternateLang: Locale = lang === 'en' ? 'es' : 'en';
+const alternateStudy = (await getAll(alternateLang)).find(({ data: candidate }) => candidate.translationKey === data.translationKey);
+if (!alternateStudy) throw new Error(`Missing translation for case study: ${data.translationKey}`);
+const canonicalPath = ROUTE_NAMES[lang].workDetail(data.slug);
+const alternatePath = ROUTE_NAMES[alternateLang].workDetail(alternateStudy.data.slug);
+---
+
+<AppShell title={data.title} description={data.summary} {lang} activeRoute="work" {canonicalPath} {alternatePath}>
+  <article class="case-study" style={caseAccentStyle(data.order)}>
+    <div class="case-study__progress" aria-hidden="true"></div>
+    <TopAppBar backHref={ROUTE_NAMES[lang].work} backLabel={ui.actions.backToWork} title={ui.nav.work} />
+    <div class="case-study__layout">
+      <div class="case-study__main">
+        <header class="case-study__header md-enter md-enter-1">
+          <h1 class="md-display-medium" style={`view-transition-name: ${caseTitleName(data.slug)};`}>{data.title}</h1>
+          <p class="md-title-large summary">{data.summary}</p>
+        </header>
+
+        <div class="case-study__narrative">
+          <section class="md-reveal md-enter md-enter-4"><h2 class="md-headline-medium">{ui.sections.context}</h2><p class="md-body-large">{data.context}</p></section>
+          <section class="md-reveal"><h2 class="md-headline-medium">{ui.sections.problem}</h2><p class="md-body-large">{data.problem}</p></section>
+          <section class="md-reveal"><h2 class="md-headline-medium">{ui.sections.approach}</h2><ul class="approach">{data.approach.map((item) => <li class="md-body-large">{item}</li>)}</ul></section>
+          <ProjectGallery gallery={data.gallery} />
+          <section class="md-reveal"><h2 class="md-headline-medium">{ui.sections.constraints}</h2><p class="md-body-large">{data.constraints}</p></section>
+          <section class="md-reveal"><h2 class="md-headline-medium">{ui.sections.outcome}</h2><p class="md-body-large">{data.outcome}</p></section>
+        </div>
+      </div>
+
+      <aside class="case-study__rail">
+        <div class="meta md-label-large" style={`view-transition-name: ${caseMetaName(data.slug)};`}><span>{data.client}</span><span>{data.role}</span><span>{data.period}</span></div>
+
+        <section class="case-study__stack md-reveal md-enter md-enter-3" aria-labelledby="stack-title">
+          <h2 id="stack-title" class="md-headline-medium">{ui.sections.stack}</h2>
+          <ul class="chips">{data.stack.map((item) => <li class="md-label-medium">{item}</li>)}</ul>
+        </section>
+      </aside>
+
+      <div class="case-study__metrics-band">
+        <section class="case-study__metrics md-reveal md-enter md-enter-2" aria-labelledby="metrics-title">
+          <h2 id="metrics-title" class="md-headline-medium">{ui.sections.metrics}</h2>
+          <div class="metrics">
+            {data.metrics.map((metric, index) => <div class="md-elevation-2" style={`--md-metric-delay: ${index * 40}ms;`}><strong class="md-display-small md-metric-value">{metric.value}</strong><span class="md-label-large">{metric.label}</span></div>)}
+          </div>
+        </section>
+      </div>
+    </div>
+  </article>
+</AppShell>
+
+<style>
+  @keyframes case-study-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  .case-study__progress {
+    animation: case-study-progress linear;
+    animation-timeline: scroll(root block);
+    background: var(--case-accent);
+    height: 2px;
+    left: 0;
+    pointer-events: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    z-index: 30;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .case-study__progress { display: none; }
+  }
+
+  .case-study { margin: auto; max-width: 880px; }
+  .case-study__layout {
+    display: grid;
+    grid-template-areas:
+      'meta'
+      'header'
+      'metrics'
+      'stack'
+      'narrative';
+  }
+  .case-study__main,
+  .case-study__rail { display: contents; }
+  .meta { color: var(--md-on-surface-variant); display: flex; flex-wrap: wrap; gap: 8px 20px; grid-area: meta; margin-bottom: 20px; padding-top: 40px; }
+  .case-study__header { grid-area: header; padding-block: 0 64px; }
+  .case-study__metrics-band {
+    background: var(--md-surface-container-low);
+    grid-area: metrics;
+    margin-inline: -20px;
+    padding-block: 48px;
+    padding-inline: 20px;
+  }
+  .case-study__metrics { padding-block: 0; }
+  .case-study__stack { grid-area: stack; }
+  .case-study__narrative { grid-area: narrative; }
+  .summary { color: var(--md-on-surface-variant); margin-top: 24px; max-width: 68ch; }
+  section { padding-block: 48px; }
+  section h2 {
+    color: var(--md-on-surface-variant);
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  section h2::before { background: var(--md-on-surface-variant); border-radius: 3px; content: ''; display: block; height: 3px; margin-bottom: 12px; width: 40px; }
+  section p, .approach { color: var(--md-on-surface-variant); margin-block: 0; }
+  section p, .approach li { max-width: 68ch; }
+  .metrics { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .metrics div { background: var(--md-surface-container); border-left: 3px solid var(--case-accent); border-radius: 18px; display: grid; gap: 6px; padding: 20px; }
+  .metrics strong { color: var(--case-accent); }
+  .metrics span { color: var(--md-on-surface-variant); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+  .chips li { background: transparent; border: 1px solid var(--md-outline-variant); border-radius: 999px; color: var(--md-on-surface); padding: 6px 12px; }
+  .chips li:nth-child(-n+3) { background: var(--case-accent-container); border-color: transparent; color: var(--case-on-accent-container); }
+  .approach { display: grid; gap: 12px; padding-left: 24px; }
+
+  @media (min-width: 600px) {
+    .case-study__metrics-band { margin-inline: -40px; padding-inline: 40px; }
+  }
+
+  @media (min-width: 840px) {
+    .case-study__metrics-band { margin-inline: -64px; padding-inline: 64px; }
+  }
+
+  @media (min-width: 1200px) {
+    .case-study { max-width: none; }
+    .case-study__layout {
+      align-items: start;
+      column-gap: 48px;
+      grid-template-areas:
+        'header rail'
+        'metrics metrics'
+        'narrative narrative';
+      grid-template-columns: minmax(0, 68ch) 320px;
+    }
+    .case-study__rail {
+      display: flex;
+      flex-direction: column;
+      grid-area: rail;
+      position: sticky;
+      top: 96px;
+      width: 320px;
+    }
+    .meta { flex-direction: column; gap: 8px; }
+    .case-study__header { max-width: 68ch; min-width: 0; padding-block: 40px 64px; }
+    .case-study__narrative { max-width: 68ch; min-width: 0; }
+  }
+</style>

@@ -1,0 +1,12 @@
+---
+import CaseStudyScreen from '@features/case_studies/presentation/screens/CaseStudyScreen.astro';
+import { getAllSlugs } from '@features/case_studies/data/repositories/case_study_repository';
+
+export async function getStaticPaths() {
+  return (await getAllSlugs('es')).map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+---
+
+<CaseStudyScreen lang="es" slug={slug!} />

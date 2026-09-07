@@ -1,0 +1,57 @@
+---
+import AppShell from '@app/shell/AppShell.astro';
+import Ripple from '@core/widgets/Ripple.astro';
+import { get as getProfile } from '@features/about/data/repositories/profile_repository';
+import { getUiCopy, type Locale } from '@core/utils/i18n';
+import { ROUTE_NAMES } from '@app/router/route_names';
+import AppIcon from '@core/widgets/AppIcon.astro';
+
+interface Props { lang: Locale; }
+
+const { lang } = Astro.props;
+const profile = await getProfile(lang);
+if (!profile) throw new Error(`Missing profile for ${lang}`);
+const { data } = profile;
+const ui = getUiCopy(lang);
+const links = data.links.filter(({ label }) => label === 'Email' || label === 'LinkedIn' || label === 'GitHub');
+---
+
+<AppShell title={`${ui.pages.contact} — ${data.name}`} description={data.availability} {lang} activeRoute="contact">
+  <section class="contact" aria-labelledby="contact-title">
+    <header class="md-enter md-enter-1">
+      <p class="md-label-large eyebrow">{data.availability}</p>
+      <h1 id="contact-title" class="md-display-medium">{ui.pages.contact}</h1>
+      <p class="md-title-large">{data.timezone}</p>
+    </header>
+    <div class="contact-grid md-enter md-enter-2">
+      {links.map((link) => (
+        <Ripple style="border-radius: 24px; display: block;">
+          <a class="contact-card md-elevation-2 md-state-layer" href={link.url}>
+            <span class="contact-heading"><AppIcon name={link.label === 'Email' ? 'email' : link.label.toLowerCase()} size={24} state="inactive" /><span class="md-title-large">{link.label}</span></span>
+            <span class="md-body-medium">{link.url}</span>
+          </a>
+        </Ripple>
+      ))}
+    </div>
+    <Ripple class="md-enter md-enter-3" style="border-radius: 999px; display: inline-grid; margin-top: 48px;">
+      <a class="home-link md-label-large md-state-layer" href={ROUTE_NAMES[lang].home}>{ui.actions.backHome}</a>
+    </Ripple>
+  </section>
+</AppShell>
+
+<style>
+  .contact { margin: auto; max-width: 900px; }
+  header { padding-block: 48px 64px; }
+  .eyebrow { color: var(--md-primary); }
+  header p:last-child { color: var(--md-on-surface-variant); margin-top: 20px; }
+  .contact-grid { display: grid; gap: 16px; }
+  .contact-card { background: var(--md-surface-container); border: 1px solid var(--md-outline-variant); border-radius: 24px; color: var(--md-on-surface); display: grid; gap: 8px; padding: 28px; text-decoration: none; }
+  .contact-heading { align-items: center; display: flex; gap: 12px; }
+  .contact-card > span:last-child { color: var(--md-on-surface-variant); overflow-wrap: anywhere; }
+  .home-link { background: var(--md-primary-container); border-radius: 999px; color: var(--md-on-primary-container); padding: 12px 20px; text-decoration: none; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .contact-card:hover { border-color: var(--md-outline); }
+  }
+
+</style>

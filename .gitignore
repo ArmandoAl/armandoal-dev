@@ -13,3 +13,6 @@ dist/
 # system and editor files
 .DS_Store
 *.swp
+
+# firebase
+.firebase/

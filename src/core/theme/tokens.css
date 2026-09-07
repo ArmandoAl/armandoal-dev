@@ -1,0 +1,80 @@
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+  --md-surface: #0F1417;
+  --md-surface-container-low: #171C20;
+  --md-surface-container: #1B2125;
+  --md-surface-container-high: #262B2F;
+  --md-surface-container-highest: #31363A;
+  --md-on-surface: #DFE3E7;
+  --md-on-surface-variant: #BFC8CE;
+  --md-outline: #89939A;
+  --md-outline-variant: #3F484E;
+  --md-primary: #86D0FF;
+  --md-on-primary: #00344F;
+  --md-primary-container: #004B70;
+  --md-on-primary-container: #C7E7FF;
+  --md-secondary: #B6C9D8;
+  --md-on-secondary: #21323E;
+  --md-secondary-container: #374955;
+  --md-on-secondary-container: #D2E5F5;
+  --md-tertiary: #FFB77C;
+  --md-on-tertiary: #4A2800;
+  --md-tertiary-container: #6A3B00;
+  --md-on-tertiary-container: #FFDCC2;
+  --md-error: #FFB4AB;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+  --md-surface: #F6FAFE;
+  --md-surface-container-low: #F0F4F8;
+  --md-surface-container: #EAEFF2;
+  --md-surface-container-high: #E5E9ED;
+  --md-surface-container-highest: #DFE3E7;
+  --md-on-surface: #181C1F;
+  --md-on-surface-variant: #40484D;
+  --md-outline: #70787E;
+  --md-outline-variant: #BFC8CE;
+  --md-primary: #006493;
+  --md-on-primary: #FFFFFF;
+  --md-primary-container: #C7E7FF;
+  --md-on-primary-container: #001E30;
+  --md-secondary: #4E616E;
+  --md-on-secondary: #FFFFFF;
+  --md-secondary-container: #D2E5F5;
+  --md-on-secondary-container: #0A1D28;
+  --md-tertiary: #8B5000;
+  --md-on-tertiary: #FFFFFF;
+  --md-tertiary-container: #FFDCC2;
+  --md-on-tertiary-container: #2C1600;
+  --md-error: #BA1A1A;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --md-surface: #F6FAFE;
+    --md-surface-container-low: #F0F4F8;
+    --md-surface-container: #EAEFF2;
+    --md-surface-container-high: #E5E9ED;
+    --md-surface-container-highest: #DFE3E7;
+    --md-on-surface: #181C1F;
+    --md-on-surface-variant: #40484D;
+    --md-outline: #70787E;
+    --md-outline-variant: #BFC8CE;
+    --md-primary: #006493;
+    --md-on-primary: #FFFFFF;
+    --md-primary-container: #C7E7FF;
+    --md-on-primary-container: #001E30;
+    --md-secondary: #4E616E;
+    --md-on-secondary: #FFFFFF;
+    --md-secondary-container: #D2E5F5;
+    --md-on-secondary-container: #0A1D28;
+    --md-tertiary: #8B5000;
+    --md-on-tertiary: #FFFFFF;
+    --md-tertiary-container: #FFDCC2;
+    --md-on-tertiary-container: #2C1600;
+    --md-error: #BA1A1A;
+  }
+}

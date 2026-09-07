@@ -1,0 +1,86 @@
+---
+import AppShell from '@app/shell/AppShell.astro';
+import { CV_PATHS } from '@app/router/route_names';
+import { get as getProfile } from '@features/about/data/repositories/profile_repository';
+import { getUiCopy, type Locale } from '@core/utils/i18n';
+import { ROUTE_NAMES } from '@app/router/route_names';
+import NextSectionCard from '@core/widgets/NextSectionCard.astro';
+import AppIcon from '@core/widgets/AppIcon.astro';
+
+interface Props { lang: Locale; }
+
+const { lang } = Astro.props;
+const profile = await getProfile(lang);
+if (!profile) throw new Error(`Missing profile for ${lang}`);
+const { data } = profile;
+const ui = getUiCopy(lang);
+---
+
+<AppShell title={`${ui.pages.about} — ${data.name}`} description={data.summary} {lang} activeRoute="about">
+  <article class="profile">
+    <header class="md-enter md-enter-1">
+      <p class="md-label-large eyebrow">{data.headline}</p>
+      <h1 class="md-display-medium">{data.name}</h1>
+      <p class="md-title-large summary">{data.summary}</p>
+      <div class="cv-actions">
+        <a class="button md-label-large md-state-layer" href={CV_PATHS.en} download><AppIcon name="download-outline" size={20} state="active" />{ui.actions.downloadCvEn}</a>
+        <a class="button md-label-large md-state-layer" href={CV_PATHS.es} download><AppIcon name="download-outline" size={20} state="active" />{ui.actions.downloadCvEs}</a>
+      </div>
+    </header>
+
+    <section class="md-enter md-enter-2">
+      <h2 class="md-headline-large">{ui.sections.experience}</h2>
+      <div class="experience-list">
+        {data.experience.map((item) => (
+          <article class="experience md-elevation-1">
+            <h3 class="md-title-large">{item.role}</h3>
+            <p class="md-title-medium">{item.company}</p>
+            <p class="md-label-large meta">{item.period} · {item.mode}</p>
+            <ul>{item.bullets.map((bullet) => <li class="md-body-large">{bullet}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="md-enter md-enter-3">
+      <h2 class="md-headline-large">{ui.sections.skills}</h2>
+      <div class="skill-groups">
+        {data.skills.map((group) => (
+          <div>
+            <h3 class="md-title-medium">{group.category}</h3>
+            <ul class="chips">{group.items.map((item) => <li class="md-label-medium">{item}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="details-grid md-enter md-enter-4">
+      <div><h2 class="md-headline-medium">{ui.sections.education}</h2><p class="md-body-large">{data.education}</p></div>
+      <div><h2 class="md-headline-medium">{ui.sections.certifications}</h2><ul>{data.certifications.map((item) => <li class="md-body-large">{item}</li>)}</ul></div>
+      <div><h2 class="md-headline-medium">{ui.sections.languages}</h2><ul>{data.languages.map((item) => <li class="md-body-large">{item}</li>)}</ul></div>
+    </section>
+    <NextSectionCard href={ROUTE_NAMES[lang].contact} label={ui.nextSection.label} title={ui.nav.contact} description={ui.nextSection.contact} />
+  </article>
+</AppShell>
+
+<style>
+  .profile { margin: auto; max-width: 960px; }
+  header { padding-block: 40px 64px; }
+  .eyebrow, .meta { color: var(--md-primary); }
+  .summary { color: var(--md-on-surface-variant); margin-block: 24px; max-width: 68ch; }
+  .cv-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .button { --app-icon-active-color: var(--md-on-primary-container); align-items: center; background: var(--md-primary-container); border-radius: 999px; color: var(--md-on-primary-container); display: inline-flex; gap: 8px; padding: 12px 20px; text-decoration: none; }
+  section { padding-block: 56px; }
+  section > h2, .details-grid h2 { margin-bottom: 24px; }
+  section > h2::before, .details-grid h2::before { background: var(--md-primary); border-radius: 3px; content: ''; display: block; height: 3px; margin-bottom: 12px; width: 40px; }
+  .experience-list, .skill-groups { display: grid; gap: 16px; }
+  .experience { background: var(--md-surface-container); border-radius: 24px; padding: 24px; }
+  .experience p { margin-block: 8px; }
+  .experience ul, .details-grid ul { color: var(--md-on-surface-variant); display: grid; gap: 8px; margin-bottom: 0; padding-left: 24px; }
+  .experience li, .details-grid p { max-width: 68ch; }
+  .skill-groups { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 12px 0 0; padding: 0; }
+  .chips li { background: var(--md-surface-container-highest); border-radius: 999px; color: var(--md-on-surface-variant); padding: 7px 13px; }
+  .details-grid { display: grid; gap: 32px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .details-grid p { color: var(--md-on-surface-variant); }
+</style>

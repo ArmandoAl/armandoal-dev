@@ -1,0 +1,29 @@
+---
+import AppShell from '@app/shell/AppShell.astro';
+import { ROUTE_NAMES } from '@app/router/route_names';
+import { getUiCopy, type Locale } from '@core/utils/i18n';
+
+interface Props { lang: Locale; }
+
+const { lang } = Astro.props;
+const ui = getUiCopy(lang);
+const alternateLang: Locale = lang === 'en' ? 'es' : 'en';
+const canonicalPath = ROUTE_NAMES[lang].notFound;
+const alternatePath = ROUTE_NAMES[alternateLang].notFound;
+---
+
+<AppShell title={ui.pages.notFoundTitle} description={ui.pages.notFoundBody} {lang} activeRoute="home" {canonicalPath} {alternatePath}>
+  <section class="not-found md-enter md-enter-1">
+    <p class="md-label-large">404</p>
+    <h1 class="md-display-medium">{ui.pages.notFoundTitle}</h1>
+    <p class="md-title-large">{ui.pages.notFoundBody}</p>
+    <a class="md-label-large md-state-layer" href={ROUTE_NAMES[lang].home}>{ui.actions.backHome}</a>
+  </section>
+</AppShell>
+
+<style>
+  .not-found { margin: auto; max-width: 720px; padding-block: 64px; }
+  .not-found > p { color: var(--md-on-surface-variant); margin-block: 16px 28px; }
+  .not-found > p:first-child { color: var(--md-primary); margin-bottom: 12px; }
+  a { background: var(--md-primary-container); border-radius: 999px; color: var(--md-on-primary-container); display: inline-block; padding: 12px 20px; text-decoration: none; }
+</style>

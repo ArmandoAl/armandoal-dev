@@ -1,0 +1,72 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ROUTE_NAMES } from '@app/router/route_names';
+import Ripple from '@core/widgets/Ripple.astro';
+import { caseMetaName, caseTitleName } from '@core/utils/view_transition';
+import type { Locale } from '@core/utils/i18n';
+import { caseAccentStyle } from '@core/theme/case_accents';
+import { Image } from 'astro:assets';
+
+interface Props {
+  study: CollectionEntry<'caseStudies'>;
+  lang: Locale;
+}
+
+const { study, lang } = Astro.props;
+const { data } = study;
+const thumbnail = data.gallery?.[0];
+---
+
+<Ripple style="border-radius: 28px; display: block; width: 100%; --md-ripple-color: var(--md-on-surface);">
+  <a class:list={['case-card', 'md-elevation-2', 'md-state-layer', { 'case-card--with-thumbnail': thumbnail }]} href={ROUTE_NAMES[lang].workDetail(data.slug)} style={caseAccentStyle(data.order)}>
+    {thumbnail && (
+      <div class:list={['case-card__thumbnail', `case-card__thumbnail--${thumbnail.kind}`]}>
+        <Image src={thumbnail.src} alt={thumbnail.alt} width={480} height={thumbnail.kind === 'mobile' ? 1040 : 360} widths={[320, 480]} sizes="(max-width: 599px) 100vw, 40vw" format="webp" loading="lazy" decoding="async" />
+      </div>
+    )}
+    <div class="case-card__body">
+      <div class="case-card__meta md-label-large" style={`view-transition-name: ${caseMetaName(data.slug)};`}>
+        <span class="client md-title-medium">{data.client}</span>
+        <span>{data.role}</span>
+        <span>{data.period}</span>
+      </div>
+      <h3 class="md-headline-large" style={`view-transition-name: ${caseTitleName(data.slug)};`}>{data.title}</h3>
+      <p class="md-body-large">{data.summary}</p>
+      <ul aria-label="Stack">
+        {data.stack.map((item) => <li class="md-label-medium">{item}</li>)}
+      </ul>
+    </div>
+  </a>
+</Ripple>
+
+<style>
+  .case-card { background: var(--md-surface-container); border: 1px solid var(--md-outline-variant); border-left: 4px solid var(--case-accent); border-radius: 28px; color: var(--md-on-surface); display: grid; gap: 20px; min-height: 320px; padding: 32px; text-decoration: none; transition: transform var(--md-duration-short) var(--md-easing-standard); }
+  .case-card__body { display: contents; }
+  .case-card__thumbnail { border-radius: 20px; min-width: 0; overflow: hidden; }
+  .case-card__thumbnail img { display: block; height: 100%; object-fit: cover; width: 100%; }
+  .case-card__meta { color: var(--md-on-surface-variant); display: flex; flex-wrap: wrap; gap: 8px 20px; }
+  .client { color: var(--case-accent); }
+  h3 { max-width: 720px; }
+  p { color: var(--md-on-surface-variant); margin: 0; max-width: 68ch; }
+  ul { align-self: end; display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 12px 0 0; padding: 0; }
+  li { background: var(--case-accent-container); border-radius: 999px; color: var(--case-on-accent-container); padding: 6px 12px; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .case-card:hover { background: var(--md-surface-container-high); border-color: var(--md-outline); border-left-color: var(--case-accent); }
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .case-card:hover { transform: translateY(-2px); }
+  }
+
+  @media (min-width: 600px) {
+    .case-card--with-thumbnail { grid-template-columns: minmax(220px, 38%) 1fr; }
+    .case-card--with-thumbnail .case-card__body { align-content: start; display: grid; gap: 20px; }
+    .case-card--with-thumbnail .case-card__thumbnail { grid-row: 1; max-height: 360px; }
+  }
+
+  @media (max-width: 599px) {
+    .case-card { min-height: 280px; padding: 24px; }
+    .case-card__thumbnail { max-height: 280px; }
+  }
+</style>

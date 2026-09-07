@@ -1,0 +1,181 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import { ROUTE_NAMES } from '@app/router/route_names';
+import '@core/theme/index.css';
+import { THEME_INIT_SCRIPT } from '@core/theme/theme';
+import { getUiCopy } from '@core/utils/i18n';
+import AppIcon from '@core/widgets/AppIcon.astro';
+import BottomNavBar from './BottomNavBar.astro';
+import NavigationRail from './NavigationRail.astro';
+import TopNavBar from './TopNavBar.astro';
+import type { AppRoute, Language } from './navigation';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Language;
+  activeRoute: AppRoute;
+  canonicalPath?: string;
+  alternatePath?: string;
+  structuredData?: Record<string, unknown>;
+}
+
+const { title, description, lang, activeRoute, structuredData } = Astro.props;
+const alternateLang: Language = lang === 'en' ? 'es' : 'en';
+const canonicalPath = Astro.props.canonicalPath ?? ROUTE_NAMES[lang][activeRoute];
+const alternatePath = Astro.props.alternatePath ?? ROUTE_NAMES[alternateLang][activeRoute];
+// ponytail: relative URLs avoid shipping localhost; Astro.site makes them absolute once a production domain exists.
+const toUrl = (path: string) => Astro.site ? new URL(path, Astro.site).href : path;
+const canonicalUrl = toUrl(canonicalPath);
+const englishUrl = toUrl(lang === 'en' ? canonicalPath : alternatePath);
+const spanishUrl = toUrl(lang === 'es' ? canonicalPath : alternatePath);
+const locale = lang === 'en' ? 'en_US' : 'es_MX';
+const alternateLocale = lang === 'en' ? 'es_MX' : 'en_US';
+const ui = getUiCopy(lang);
+const sectionPaths: string[] = [ROUTE_NAMES[lang].home, ROUTE_NAMES[lang].work, ROUTE_NAMES[lang].about, ROUTE_NAMES[lang].contact];
+const sectionIndex = sectionPaths.indexOf(canonicalPath);
+const swipePrevious = sectionIndex > 0 ? sectionPaths[sectionIndex - 1] : undefined;
+const swipeNext = sectionIndex >= 0 && sectionIndex < sectionPaths.length - 1 ? sectionPaths[sectionIndex + 1] : undefined;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang="en" href={englishUrl} />
+    <link rel="alternate" hreflang="es" href={spanishUrl} />
+    <link rel="alternate" hreflang="x-default" href={englishUrl} />
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="Armando Alvarado" />
+    <meta property="og:locale" content={locale} />
+    <meta property="og:locale:alternate" content={alternateLocale} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <script is:inline set:html={THEME_INIT_SCRIPT}></script>
+    {structuredData && <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>}
+    <ClientRouter fallback="swap" />
+  </head>
+  <body data-swipe-previous={swipePrevious} data-swipe-next={swipeNext}>
+    <a class="skip-link md-state-layer" href="#main-content">{ui.accessibility.skipToContent}</a>
+    <BottomNavBar {lang} {activeRoute} />
+    <NavigationRail {lang} {activeRoute} />
+    <TopNavBar {lang} {activeRoute} {canonicalPath} {alternatePath} />
+
+    <div class="shell-actions">
+      <button class="icon-button md-state-layer" type="button" data-theme-toggle aria-label={ui.actions.toggleTheme} title={ui.actions.toggleTheme}>
+        <AppIcon name="theme" size={20} state="inactive" />
+      </button>
+      <div class="language-switcher" aria-label={ui.actions.changeLanguage}>
+        <a class="md-state-layer" href={lang === 'en' ? canonicalPath : alternatePath} aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+        <a class="md-state-layer" href={lang === 'es' ? canonicalPath : alternatePath} aria-current={lang === 'es' ? 'true' : undefined}>ES</a>
+      </div>
+    </div>
+
+    <main id="main-content" class="app-content" transition:name="page-content">
+      <slot />
+    </main>
+
+    <script>
+      import { toggleTheme } from '@core/theme/theme';
+      import { initSwipeNavigation } from '@core/utils/swipe_navigation';
+      import { initNavIndicators } from './nav_indicator';
+
+      document.addEventListener('astro:page-load', initSwipeNavigation);
+      document.addEventListener('astro:page-load', initNavIndicators);
+
+      document.addEventListener('click', (event) => {
+        const button = event.target instanceof Element ? event.target.closest('[data-theme-toggle]') : null;
+        if (button) {
+          toggleTheme();
+        }
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .skip-link {
+    background: var(--md-primary);
+    border-radius: 0 0 12px 0;
+    color: var(--md-on-primary);
+    left: 0;
+    padding: 12px 16px;
+    position: fixed;
+    top: 0;
+    transform: translateY(-110%);
+    z-index: 100;
+  }
+
+  .skip-link:focus { transform: translateY(0); }
+
+  .shell-actions {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 10;
+  }
+
+  .icon-button,
+  .language-switcher {
+    background: var(--md-surface-container-high);
+    border: 1px solid var(--md-outline-variant);
+    color: var(--md-on-surface);
+  }
+
+  .icon-button { align-items: center; border-radius: 50%; cursor: pointer; display: flex; height: 40px; justify-content: center; width: 40px; }
+  .language-switcher { border-radius: 999px; display: flex; padding: 3px; }
+  .language-switcher a { border-radius: 999px; color: var(--md-on-surface); font: 500 12px/16px var(--md-font-family); padding: 8px 10px; text-decoration: none; }
+  .language-switcher a[aria-current] { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+
+  .app-content { min-width: 0; padding: 88px 20px 112px; }
+
+  .nav-indicator {
+    background: var(--md-primary-container);
+    border-radius: 999px;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    transition: transform var(--md-nav-transition-duration) var(--md-easing-emphasized-decelerate);
+    z-index: 0;
+  }
+
+  [data-nav-indicator][data-indicator='js'] .nav-indicator { opacity: 1; }
+  [data-nav-indicator]:not([data-indicator='js']) [data-nav-item][aria-current='page'] { background: var(--md-primary-container); }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: var(--md-nav-transition-duration);
+    animation-timing-function: var(--md-easing-emphasized-decelerate);
+  }
+
+  ::view-transition-group(bottom-nav),
+  ::view-transition-group(nav-rail),
+  ::view-transition-group(top-nav) {
+    animation: none;
+    z-index: 100;
+  }
+
+  @media (min-width: 600px) {
+    .app-content { margin-left: 88px; padding: 88px 40px 64px; }
+  }
+
+  @media (min-width: 840px) {
+    .shell-actions { display: none; }
+    .app-content { margin: 0 auto; max-width: 1100px; padding: 96px 64px 80px; }
+  }
+</style>

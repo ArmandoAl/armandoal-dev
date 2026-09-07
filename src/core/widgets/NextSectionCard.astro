@@ -1,0 +1,48 @@
+---
+import Ripple from './Ripple.astro';
+import AppIcon from './AppIcon.astro';
+
+interface Props {
+  href: string;
+  label: string;
+  title: string;
+  description: string;
+}
+
+const { href, label, title, description } = Astro.props;
+---
+
+<div class="next-section-wrap">
+  <Ripple style="border-radius: 28px; display: block; width: 100%; --md-ripple-color: var(--md-on-surface);">
+    <a class="next-section md-state-layer" href={href}>
+      <span>
+        <small class="md-label-large">{label}</small>
+        <strong class="md-headline-medium">{title}</strong>
+        <span class="md-body-large description">{description}</span>
+      </span>
+      <AppIcon name="arrow-right" size={32} state="active" />
+    </a>
+  </Ripple>
+</div>
+
+<style>
+  .next-section-wrap { margin-top: 64px; }
+  .next-section { align-items: center; background: var(--md-surface-container-high); border-radius: 28px; color: var(--md-on-surface); display: grid; gap: 24px; grid-template-columns: 1fr auto; min-height: 176px; padding: 32px; text-decoration: none; transition: transform var(--md-duration-short) var(--md-easing-standard); }
+  .next-section > span { display: grid; gap: 8px; }
+  small { color: var(--md-primary); }
+  strong { font-weight: 400; }
+  .description { color: var(--md-on-surface-variant); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .next-section:hover { background: var(--md-surface-container-highest); }
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .next-section:hover { transform: translateY(-2px); }
+  }
+
+  @media (max-width: 599px) {
+    .next-section-wrap { margin-top: 48px; }
+    .next-section { min-height: 152px; padding: 24px; }
+  }
+</style>
