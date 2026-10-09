@@ -2,10 +2,10 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 
-type Gallery = NonNullable<CollectionEntry<'caseStudies'>['data']['gallery']>;
-interface Props { gallery?: Gallery; }
+type Gallery = NonNullable<CollectionEntry<'caseStudies'>['data']['gallery'] | CollectionEntry<'projects'>['data']['gallery']>;
+interface Props { gallery?: Gallery; closeLabel: string; mobileScreenshotsLabel: string; }
 
-const { gallery } = Astro.props;
+const { gallery, closeLabel, mobileScreenshotsLabel } = Astro.props;
 const mobile = gallery?.filter(({ kind }) => kind === 'mobile') ?? [];
 const desktop = gallery?.filter(({ kind }) => kind === 'desktop') ?? [];
 const mobileGroups = Array.from({ length: Math.ceil(mobile.length / 3) }, (_, index) => mobile.slice(index * 3, index * 3 + 3));
@@ -14,7 +14,7 @@ const mobileGroups = Array.from({ length: Math.ceil(mobile.length / 3) }, (_, in
 {gallery?.length ? (
   <div class="project-gallery">
     {mobileGroups.map((group, groupIndex) => (
-      <div class="project-gallery__mobile" aria-label="Mobile application screenshots">
+      <div class="project-gallery__mobile" aria-label={mobileScreenshotsLabel}>
         {group.map((image, imageIndex) => {
           const id = `gallery-mobile-${groupIndex}-${imageIndex}`;
           return (
@@ -25,13 +25,13 @@ const mobileGroups = Array.from({ length: Math.ceil(mobile.length / 3) }, (_, in
                 'project-gallery__mobile-shot--right': group.length > 1 && imageIndex === group.length - 1,
               }]}>
                 <button type="button" data-gallery-open={id} aria-label={image.caption ?? image.alt}>
-                  <Image src={image.src} alt={image.alt} width={420} height={910} widths={[280, 420]} sizes="(max-width: 599px) 88vw, 420px" format="webp" loading="lazy" decoding="async" />
+                  <Image src={image.src} alt={image.alt} width={image.src.width} height={image.src.height} widths={[280, 420]} sizes="(max-width: 599px) 88vw, 420px" format="webp" loading="lazy" decoding="async" />
                 </button>
                 {image.caption && <figcaption class="md-body-small">{image.caption}</figcaption>}
               </figure>
               <dialog id={id} class="project-gallery__dialog">
-                <button class="project-gallery__close md-label-large" type="button" data-gallery-close aria-label="Close">×</button>
-                <Image src={image.src} alt={image.alt} width={420} height={910} widths={[280, 420]} sizes="min(90vw, 420px)" format="webp" loading="lazy" decoding="async" />
+                <button class="project-gallery__close md-label-large" type="button" data-gallery-close aria-label={closeLabel}>×</button>
+                <Image src={image.src} alt={image.alt} width={image.src.width} height={image.src.height} widths={[280, 420]} sizes="min(90vw, 420px)" format="webp" loading="lazy" decoding="async" />
                 {image.caption && <p class="md-body-medium">{image.caption}</p>}
               </dialog>
             </>
@@ -46,13 +46,13 @@ const mobileGroups = Array.from({ length: Math.ceil(mobile.length / 3) }, (_, in
         <>
           <figure class="project-gallery__desktop">
             <button type="button" data-gallery-open={id} aria-label={image.caption ?? image.alt}>
-              <Image src={image.src} alt={image.alt} width={1100} height={825} widths={[640, 880, 1100]} sizes="(max-width: 839px) 100vw, 880px" format="webp" loading="lazy" decoding="async" />
+              <Image src={image.src} alt={image.alt} width={image.src.width} height={image.src.height} widths={[640, 880, 1100]} sizes="(max-width: 839px) 100vw, 880px" format="webp" loading="lazy" decoding="async" />
             </button>
             {image.caption && <figcaption class="md-body-small">{image.caption}</figcaption>}
           </figure>
           <dialog id={id} class="project-gallery__dialog">
-            <button class="project-gallery__close md-label-large" type="button" data-gallery-close aria-label="Close">×</button>
-            <Image src={image.src} alt={image.alt} width={1100} height={825} widths={[640, 880, 1100]} sizes="min(94vw, 1100px)" format="webp" loading="lazy" decoding="async" />
+            <button class="project-gallery__close md-label-large" type="button" data-gallery-close aria-label={closeLabel}>×</button>
+            <Image src={image.src} alt={image.alt} width={image.src.width} height={image.src.height} widths={[640, 880, 1100]} sizes="min(94vw, 1100px)" format="webp" loading="lazy" decoding="async" />
             {image.caption && <p class="md-body-medium">{image.caption}</p>}
           </dialog>
         </>
@@ -65,7 +65,7 @@ const mobileGroups = Array.from({ length: Math.ceil(mobile.length / 3) }, (_, in
   .project-gallery { display: grid; gap: 48px; padding-block: 48px; }
   .project-gallery__mobile { align-items: center; display: flex; justify-content: center; position: relative; }
   .project-gallery__mobile::before { background: radial-gradient(circle, color-mix(in srgb, var(--case-accent) 18%, transparent), transparent 68%); content: ''; inset: -15%; pointer-events: none; position: absolute; }
-  .project-gallery__mobile-shot { margin: 0; position: relative; width: min(38%, 420px); }
+  .project-gallery__mobile-shot { margin: 0; position: relative; width: min(32%, 420px); }
   .project-gallery__mobile-shot--left { margin-right: -4%; transform: rotate(-3deg); }
   .project-gallery__mobile-shot--center { margin-right: -4%; transform: scale(1.05); z-index: 2; }
   .project-gallery__mobile-shot--right { transform: rotate(3deg); }

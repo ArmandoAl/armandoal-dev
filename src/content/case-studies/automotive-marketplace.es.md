@@ -44,6 +44,10 @@ featured: true
 order: 1
 coverAlt: "Aplicación móvil de marketplace automotriz unificada desde dos bases de código nativas a una sola aplicación Flutter"
 gallery:
+  - src: ./images/automotive-marketplace-dashboard-2025.png
+    alt: "Tablero de escritorio con métricas de antigüedad de inventario, visitas, intenciones de llamada y mensajes"
+    kind: desktop
+    caption: "Tablero de operación para inventario y actividad de leads"
   - src: ./images/automotive-marketplace-vehicle-form.png
     alt: "Formulario móvil para editar la publicación de un vehículo, con título, odómetro, precio, financiamiento y datos mecánicos"
     kind: mobile
@@ -56,10 +60,6 @@ gallery:
     alt: "Lista móvil de inventario de vehículos activos, con fotos, precios, kilometraje y filtros de estado"
     kind: mobile
     caption: "Inventario activo con filtros por estado de publicación"
-  - src: ./images/automotive-marketplace-dashboard.png
-    alt: "Tablero de escritorio con métricas de antigüedad de inventario, visitas, intenciones de llamada y mensajes"
-    kind: desktop
-    caption: "Tablero de operación para inventario y actividad de leads"
 ---
 
 La parte interesante de este proyecto nunca fue la migración en sí. Fue la restricción.

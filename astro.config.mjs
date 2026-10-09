@@ -13,7 +13,7 @@ const stripIconMotion = () => ({
 export default defineConfig({
   site: 'https://armandoal.dev',
   output: 'static',
-  integrations: [icon({ include: { 'line-md': ['home', 'briefcase', 'account', 'email', 'arrow-left', 'arrow-right', 'download-outline', 'github', 'linkedin', 'sunny', 'moon'] } })],
+  integrations: [icon({ include: { 'line-md': ['home', 'briefcase', 'account', 'email', 'arrow-left', 'arrow-right', 'download-outline', 'external-link', 'github', 'linkedin', 'moon', 'star-filled', 'sunny'] } })],
   vite: { plugins: [stripIconMotion()] },
   i18n: {
     defaultLocale: 'en',

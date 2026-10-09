@@ -1,11 +1,17 @@
 import type { APIRoute } from 'astro';
 import { ROUTE_NAMES } from '@app/router/route_names';
-import { getAllSlugs } from '@features/case_studies/data/repositories/case_study_repository';
+import { getAllSlugs as getCaseStudySlugs } from '@features/case_studies/data/repositories/case_study_repository';
+import { getAllSlugs as getProjectSlugs } from '@features/projects/data/repositories/project_repository';
 
 export const prerender = true;
 
 export const GET: APIRoute = async () => {
-  const [englishSlugs, spanishSlugs] = await Promise.all([getAllSlugs('en'), getAllSlugs('es')]);
+  const [englishSlugs, spanishSlugs, englishProjectSlugs, spanishProjectSlugs] = await Promise.all([
+    getCaseStudySlugs('en'),
+    getCaseStudySlugs('es'),
+    getProjectSlugs('en'),
+    getProjectSlugs('es'),
+  ]);
   const paths = [
     ROUTE_NAMES.en.home,
     ROUTE_NAMES.es.home,
@@ -13,6 +19,10 @@ export const GET: APIRoute = async () => {
     ROUTE_NAMES.es.work,
     ...englishSlugs.map(ROUTE_NAMES.en.workDetail),
     ...spanishSlugs.map(ROUTE_NAMES.es.workDetail),
+    ROUTE_NAMES.en.projects,
+    ROUTE_NAMES.es.projects,
+    ...englishProjectSlugs.map(ROUTE_NAMES.en.projectDetail),
+    ...spanishProjectSlugs.map(ROUTE_NAMES.es.projectDetail),
     ROUTE_NAMES.en.about,
     ROUTE_NAMES.es.about,
     ROUTE_NAMES.en.contact,

@@ -9,3 +9,11 @@ export function caseTitleName(slug: string): string {
 export function caseMetaName(slug: string): string {
   return `case-meta-${asIdent(slug)}`;
 }
+
+export function projectTitleName(slug: string): string {
+  return `project-title-${asIdent(slug)}`;
+}
+
+export function projectMetaName(slug: string): string {
+  return `project-meta-${asIdent(slug)}`;
+}

@@ -28,49 +28,53 @@ const ui = getUiCopy(lang);
       </div>
     </header>
 
-    <section class="md-enter md-enter-2">
-      <h2 class="md-headline-large">{ui.sections.experience}</h2>
-      <div class="experience-list">
-        {data.experience.map((item) => (
-          <article class="experience md-elevation-1">
-            <h3 class="md-title-large">{item.role}</h3>
-            <p class="md-title-medium">{item.company}</p>
-            <p class="md-label-large meta">{item.period} · {item.mode}</p>
-            <ul>{item.bullets.map((bullet) => <li class="md-body-large">{bullet}</li>)}</ul>
-          </article>
-        ))}
-      </div>
-    </section>
+    <div class="profile-grid">
+      <section class="md-enter md-enter-2">
+        <h2 class="md-headline-large">{ui.sections.experience}</h2>
+        <div class="experience-list">
+          {data.experience.map((item) => (
+            <article class="experience md-elevation-1">
+              <h3 class="md-title-large">{item.role}</h3>
+              <p class="md-title-medium">{item.company}</p>
+              <p class="md-label-large meta">{item.period} · {item.mode}</p>
+              <ul>{item.bullets.map((bullet) => <li class="md-body-large">{bullet}</li>)}</ul>
+            </article>
+          ))}
+        </div>
+      </section>
 
-    <section class="md-enter md-enter-3">
-      <h2 class="md-headline-large">{ui.sections.skills}</h2>
-      <div class="skill-groups">
-        {data.skills.map((group) => (
-          <div>
-            <h3 class="md-title-medium">{group.category}</h3>
-            <ul class="chips">{group.items.map((item) => <li class="md-label-medium">{item}</li>)}</ul>
+      <aside class="profile-support md-enter md-enter-3">
+        <section>
+          <h2 class="md-headline-medium">{ui.sections.skills}</h2>
+          <div class="skill-groups">
+            {data.skills.map((group) => (
+              <div>
+                <h3 class="md-title-medium">{group.category}</h3>
+                <ul class="chips">{group.items.map((item) => <li class="md-label-medium">{item}</li>)}</ul>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </section>
+        </section>
 
-    <section class="details-grid md-enter md-enter-4">
-      <div><h2 class="md-headline-medium">{ui.sections.education}</h2><p class="md-body-large">{data.education}</p></div>
-      <div><h2 class="md-headline-medium">{ui.sections.certifications}</h2><ul>{data.certifications.map((item) => <li class="md-body-large">{item}</li>)}</ul></div>
-      <div><h2 class="md-headline-medium">{ui.sections.languages}</h2><ul>{data.languages.map((item) => <li class="md-body-large">{item}</li>)}</ul></div>
-    </section>
+        <section class="details-grid">
+          <div><h2 class="md-headline-medium">{ui.sections.education}</h2><p class="md-body-large">{data.education}</p></div>
+          <div><h2 class="md-headline-medium">{ui.sections.certifications}</h2><ul>{data.certifications.map((item) => <li class="md-body-large">{item}</li>)}</ul></div>
+          <div><h2 class="md-headline-medium">{ui.sections.languages}</h2><ul>{data.languages.map((item) => <li class="md-body-large">{item}</li>)}</ul></div>
+        </section>
+      </aside>
+    </div>
     <NextSectionCard href={ROUTE_NAMES[lang].contact} label={ui.nextSection.label} title={ui.nav.contact} description={ui.nextSection.contact} />
   </article>
 </AppShell>
 
 <style>
-  .profile { margin: auto; max-width: 960px; }
+  .profile { margin: auto; max-width: 1200px; }
   header { padding-block: 40px 64px; }
   .eyebrow, .meta { color: var(--md-primary); }
   .summary { color: var(--md-on-surface-variant); margin-block: 24px; max-width: 68ch; }
   .cv-actions { display: flex; flex-wrap: wrap; gap: 12px; }
   .button { --app-icon-active-color: var(--md-on-primary-container); align-items: center; background: var(--md-primary-container); border-radius: 999px; color: var(--md-on-primary-container); display: inline-flex; gap: 8px; padding: 12px 20px; text-decoration: none; }
-  section { padding-block: 56px; }
+  section { padding-block: 40px; }
   section > h2, .details-grid h2 { margin-bottom: 24px; }
   section > h2::before, .details-grid h2::before { background: var(--md-primary); border-radius: 3px; content: ''; display: block; height: 3px; margin-bottom: 12px; width: 40px; }
   .experience-list, .skill-groups { display: grid; gap: 16px; }
@@ -78,9 +82,16 @@ const ui = getUiCopy(lang);
   .experience p { margin-block: 8px; }
   .experience ul, .details-grid ul { color: var(--md-on-surface-variant); display: grid; gap: 8px; margin-bottom: 0; padding-left: 24px; }
   .experience li, .details-grid p { max-width: 68ch; }
-  .skill-groups { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .skill-groups { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 12px 0 0; padding: 0; }
   .chips li { background: var(--md-surface-container-highest); border-radius: 999px; color: var(--md-on-surface-variant); padding: 7px 13px; }
-  .details-grid { display: grid; gap: 32px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .details-grid { display: grid; gap: 40px; }
   .details-grid p { color: var(--md-on-surface-variant); }
+  .profile-support { min-width: 0; }
+
+  @media (min-width: 1024px) {
+    .profile-grid { align-items: start; display: grid; gap: 48px; grid-template-columns: minmax(0, 1fr) 360px; }
+    .profile-support { background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); border-radius: 28px; margin-top: 40px; padding: 8px 28px 28px; }
+    .profile-support section { padding-block: 32px; }
+  }
 </style>

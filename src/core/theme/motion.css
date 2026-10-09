@@ -8,29 +8,6 @@
   --md-nav-transition-duration: 300ms;
 }
 
-@keyframes md-content-enter {
-  from { opacity: 0; transform: translateY(12px); }
-}
-
-.md-enter {
-  animation: md-content-enter var(--md-duration-medium) var(--md-easing-emphasized-decelerate);
-  animation-fill-mode: both;
-}
-
-.md-enter-2 { animation-delay: 60ms; }
-.md-enter-3 { animation-delay: 120ms; }
-.md-enter-4 { animation-delay: 180ms; }
-
-@keyframes md-metric-enter {
-  from { opacity: 0; transform: translateY(8px); }
-}
-
-.md-metric-value {
-  animation: md-metric-enter var(--md-duration-medium) var(--md-easing-emphasized-decelerate);
-  animation-delay: var(--md-metric-delay, 0ms);
-  animation-fill-mode: both;
-}
-
 @keyframes md-reveal {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }

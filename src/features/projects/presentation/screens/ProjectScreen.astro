@@ -1,0 +1,90 @@
+---
+import AppShell from '@app/shell/AppShell.astro';
+import { ROUTE_NAMES } from '@app/router/route_names';
+import { caseAccentStyle } from '@core/theme/case_accents';
+import { getUiCopy, type Locale } from '@core/utils/i18n';
+import { projectMetaName, projectTitleName } from '@core/utils/view_transition';
+import AppIcon from '@core/widgets/AppIcon.astro';
+import TopAppBar from '@core/widgets/TopAppBar.astro';
+import ProjectGallery from '@features/case_studies/presentation/widgets/ProjectGallery.astro';
+import { getBySlug } from '@features/projects/data/repositories/project_repository';
+
+interface Props { slug: string; lang: Locale; }
+
+const { slug, lang } = Astro.props;
+const project = await getBySlug(slug, lang);
+if (!project) throw new Error(`Missing project: ${lang}/${slug}`);
+const { data } = project;
+const ui = getUiCopy(lang);
+const alternateLang: Locale = lang === 'en' ? 'es' : 'en';
+const alternateProject = await getBySlug(slug, alternateLang);
+if (!alternateProject) throw new Error(`Missing translation for project: ${slug}`);
+const canonicalPath = ROUTE_NAMES[lang].projectDetail(data.slug);
+const alternatePath = ROUTE_NAMES[alternateLang].projectDetail(alternateProject.data.slug);
+---
+
+<AppShell title={data.name} description={data.summary} {lang} activeRoute="projects" {canonicalPath} {alternatePath}>
+  <article class="project" style={caseAccentStyle(data.order)}>
+    <TopAppBar backHref={ROUTE_NAMES[lang].projects} backLabel={ui.actions.backToProjects} title={ui.nav.projects} />
+
+    <header class="project__header md-enter md-enter-1">
+      <p class="project__meta md-label-large" style={`view-transition-name: ${projectMetaName(data.slug)};`}>
+        {data.language && <span>{data.language}</span>}
+        {data.stars > 0 && <span>{data.stars} ★</span>}
+      </p>
+      <h1 class="md-display-medium" style={`view-transition-name: ${projectTitleName(data.slug)};`}>{data.name}</h1>
+      <p class="summary md-title-large">{data.summary}</p>
+      <div class="project__actions">
+        <a class="project__action project__action--primary md-state-layer" href={data.repoUrl} target="_blank" rel="noopener noreferrer">
+          <AppIcon name="github" size={20} state="active" />{ui.actions.viewRepo}
+        </a>
+        {data.homepageUrl && (
+          <a class="project__action md-state-layer" href={data.homepageUrl} target="_blank" rel="noopener noreferrer">
+            <AppIcon name="external-link" size={20} state="inactive" />{ui.actions.viewLive}
+          </a>
+        )}
+      </div>
+    </header>
+
+    <div class="project__layout">
+      <div class="project__main">
+        <section class="md-reveal md-enter md-enter-2" aria-labelledby="highlights-title">
+          <h2 id="highlights-title" class="md-headline-medium">{ui.sections.highlights}</h2>
+          <ul class="highlights">{data.highlights.map((item) => <li class="md-body-large">{item}</li>)}</ul>
+        </section>
+        <ProjectGallery gallery={data.gallery} closeLabel={ui.accessibility.closeDialog} mobileScreenshotsLabel={ui.accessibility.mobileScreenshots} />
+      </div>
+
+      <aside class="project__rail md-reveal md-enter md-enter-3">
+        <section aria-labelledby="stack-title">
+          <h2 id="stack-title" class="md-headline-medium">{ui.sections.stack}</h2>
+          <ul class="chips">{data.stack.map((item) => <li class="md-label-medium">{item}</li>)}</ul>
+        </section>
+      </aside>
+    </div>
+  </article>
+</AppShell>
+
+<style>
+  .project { margin: auto; max-width: 880px; }
+  .project__header { padding-block: 40px 56px; }
+  .project__meta { color: var(--case-accent); display: flex; gap: 16px; margin-bottom: 12px; text-transform: uppercase; }
+  .summary { color: var(--md-on-surface-variant); margin: 24px 0 32px; max-width: 68ch; }
+  .project__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .project__action { align-items: center; border: 1px solid var(--md-outline); border-radius: 999px; color: var(--md-on-surface); display: inline-flex; gap: 8px; padding: 13px 20px; text-decoration: none; }
+  .project__action--primary { background: var(--md-primary); border-color: var(--md-primary); color: var(--md-on-primary); }
+  .project__action--primary .app-icon { --app-icon-active-color: currentColor; }
+  .project__layout { display: grid; gap: 32px; }
+  section { padding-block: 40px; }
+  section h2 { color: var(--md-on-surface-variant); letter-spacing: 0.08em; margin-bottom: 16px; text-transform: uppercase; }
+  section h2::before { background: var(--case-accent); border-radius: 3px; content: ''; display: block; height: 3px; margin-bottom: 12px; width: 40px; }
+  .highlights { color: var(--md-on-surface-variant); display: grid; gap: 16px; margin: 0; max-width: 68ch; padding-left: 24px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+  .chips li { background: var(--case-accent-container); border-radius: 999px; color: var(--case-on-accent-container); padding: 6px 12px; }
+
+  @media (min-width: 1200px) {
+    .project { max-width: none; }
+    .project__layout { align-items: start; grid-template-columns: minmax(0, 68ch) 320px; gap: 48px; }
+    .project__rail { position: sticky; top: 96px; }
+  }
+</style>

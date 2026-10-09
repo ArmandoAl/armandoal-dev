@@ -3,13 +3,20 @@ interface Props {
   label: string;
   value: string | number;
   delay?: number;
+  featured?: boolean;
 }
 
-const { label, value, delay = 0 } = Astro.props;
+const { label, value, delay = 0, featured = false } = Astro.props;
 ---
 
-<article class="metric-card md-elevation-2">
-  <strong class="md-display-small md-metric-value" style={`--md-metric-delay: ${delay}ms;`}>{value}</strong>
+<article class:list={['metric-card', 'md-elevation-2', { 'metric-card--featured': featured }]}>
+  <strong
+    class="md-display-small md-metric-value"
+    style={`--md-metric-delay: ${delay}ms;`}
+    data-metric-value={String(value)}
+    data-metric-delay={delay}
+    aria-label={`${value} ${label}`}
+  >{value}</strong>
   <span class="md-label-large">{label}</span>
 </article>
 
@@ -17,49 +24,50 @@ const { label, value, delay = 0 } = Astro.props;
   .metric-card { background: var(--md-surface-container); border-left: 3px solid var(--case-accent); border-radius: 20px; display: grid; gap: 8px; min-height: 148px; padding: 24px; }
   strong { color: var(--case-accent); }
   span { color: var(--md-on-surface-variant); }
+
+  .metric-card--featured {
+    background: linear-gradient(160deg, var(--case-accent-container), color-mix(in srgb, var(--case-accent-container) 70%, var(--md-surface-container)));
+    border-left: none;
+    box-shadow: 0 20px 40px -24px color-mix(in srgb, var(--case-accent) 45%, transparent);
+  }
+
+  .metric-card--featured strong,
+  .metric-card--featured span { color: var(--case-on-accent-container); }
 </style>
 
-<script is:inline>
-  (() => {
-    const card = document.currentScript?.previousElementSibling;
-    const strong = card instanceof HTMLElement ? card.querySelector('strong') : null;
-    if (!card || !strong) return;
-    const original = strong.textContent ?? '';
+<script>
+  const animateMetric = (strong: HTMLElement) => {
+    const original = strong.dataset.metricValue ?? '';
     const parsed = original.match(/^(.*?)(\d+)(.*)$/);
-    if (!parsed || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!parsed) return;
     const prefix = parsed[1];
     const target = Number(parsed[2]);
     const suffix = parsed[3];
-    const ax = 3 * 0.2 - 3 * 0 + 1, bx = 3 * 0 - 6 * 0.2, cx = 3 * 0.2;
-    const ay = 3 * 0 - 3 * 1 + 1, by = 3 * 1 - 6 * 0, cy = 3 * 0;
-    const xAt = (t) => ((ax * t + bx) * t + cx) * t;
-    const yAt = (t) => ((ay * t + by) * t + cy) * t;
-    const dxAt = (t) => (3 * ax * t + 2 * bx) * t + cx;
-    const ease = (x) => {
-      let t = x;
-      for (let i = 0; i < 8; i++) {
-        const d = dxAt(t);
-        if (Math.abs(d) < 1e-6) break;
-        t = Math.max(0, Math.min(1, t - (xAt(t) - x) / d));
-      }
-      return yAt(t);
-    };
-    const render = (n) => { strong.textContent = prefix + n + suffix; };
+    const render = (n: number) => { strong.textContent = prefix + n + suffix; };
     render(0);
-    const animate = () => {
-      const start = performance.now();
-      const frame = (now) => {
-        const t = Math.min(1, (now - start) / 900);
-        render(Math.round(target * ease(t)));
-        if (t < 1) requestAnimationFrame(frame);
-      };
-      requestAnimationFrame(frame);
-    };
+    const start = Date.now() + Number(strong.dataset.metricDelay ?? 0);
+    const timer = window.setInterval(() => {
+      const t = Math.max(0, Math.min(1, (Date.now() - start) / 900));
+      render(Math.round(target * (1 - (1 - t) ** 3)));
+      if (t === 1) window.clearInterval(timer);
+    }, 16);
+  };
+
+  const initMetricCounters = () => {
+    const values = [...document.querySelectorAll<HTMLElement>('[data-metric-value]:not([data-metric-counted])')];
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const observer = new IntersectionObserver((entries) => {
-      if (!entries.some((entry) => entry.isIntersecting)) return;
-      observer.disconnect();
-      animate();
+      entries.filter((entry) => entry.isIntersecting).forEach((entry) => {
+        const value = entry.target.querySelector<HTMLElement>('[data-metric-value]');
+        if (!value) return;
+        value.dataset.metricCounted = 'true';
+        observer.unobserve(entry.target);
+        animateMetric(value);
+      });
     }, { threshold: 0.4 });
-    observer.observe(card);
-  })();
+    values.forEach((value) => observer.observe(value.closest('.metric-card') ?? value));
+  };
+
+  document.addEventListener('astro:page-load', initMetricCounters);
+  initMetricCounters();
 </script>

@@ -44,6 +44,10 @@ featured: true
 order: 1
 coverAlt: "Automotive marketplace mobile application unified from two native codebases into a single Flutter application"
 gallery:
+  - src: ./images/automotive-marketplace-dashboard-2025.png
+    alt: "Desktop operations dashboard with inventory age, visits, call intent and message metrics"
+    kind: desktop
+    caption: "Dealership dashboard for inventory and lead activity"
   - src: ./images/automotive-marketplace-vehicle-form.png
     alt: "Mobile form for editing a vehicle listing, including title, odometer, price, financing and mechanical details"
     kind: mobile
@@ -56,10 +60,6 @@ gallery:
     alt: "Mobile inventory list of active vehicle listings with photos, prices, mileage and status filters"
     kind: mobile
     caption: "Active inventory with filters by listing status"
-  - src: ./images/automotive-marketplace-dashboard.png
-    alt: "Desktop operations dashboard with inventory age, visits, call intent and message metrics"
-    kind: desktop
-    caption: "Dealership dashboard for inventory and lead activity"
 ---
 
 The interesting part of this project was never the migration itself. It was the constraint.

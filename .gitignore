@@ -16,3 +16,9 @@ dist/
 
 # firebase
 .firebase/
+
+# temporary input data for codex tasks (deleted by the task itself)
+.codex-input/
+.audit/
+.vercel
+.env*

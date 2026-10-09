@@ -21,11 +21,11 @@ const ui = getUiCopy(lang);
   <div class="case-grid md-enter md-enter-2">
     {studies.map((study) => <CaseStudyCard {study} {lang} />)}
   </div>
-  <div class="md-enter md-enter-3"><NextSectionCard href={ROUTE_NAMES[lang].about} label={ui.nextSection.label} title={ui.nav.about} description={ui.nextSection.about} /></div>
+  <div class="md-enter md-enter-3"><NextSectionCard href={ROUTE_NAMES[lang].projects} label={ui.nextSection.label} title={ui.nav.projects} description={ui.nextSection.projects} /></div>
 </AppShell>
 
 <style>
   header { padding-block: 40px 48px; }
   header p { color: var(--md-primary); margin-bottom: 12px; text-transform: uppercase; }
-  .case-grid { display: grid; gap: 24px; }
+  .case-grid { display: grid; gap: 32px; }
 </style>

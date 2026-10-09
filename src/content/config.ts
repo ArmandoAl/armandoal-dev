@@ -38,6 +38,33 @@ const caseStudies = defineCollection({
   }).strict(),
 });
 
+const projects = defineCollection({
+  loader: glob({
+    pattern: '**/*.md',
+    base: './src/content/projects',
+    generateId: ({ entry }) => entry.replace(/\.md$/, ''),
+  }),
+  schema: ({ image }) => z.object({
+    slug: z.string(),
+    lang,
+    name: z.string(),
+    summary: z.string(),
+    highlights: z.array(z.string()),
+    repoUrl: z.url(),
+    homepageUrl: z.url().optional(),
+    language: z.string().optional(),
+    stack: z.array(z.string()),
+    stars: z.number(),
+    order: z.number(),
+    gallery: z.array(z.object({
+      src: image(),
+      alt: z.string(),
+      kind: z.enum(['mobile', 'desktop']),
+      caption: z.string().optional(),
+    }).strict()).optional(),
+  }).strict(),
+});
+
 const profile = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/profile' }),
   schema: z.object({
@@ -69,4 +96,4 @@ const profile = defineCollection({
   }).strict(),
 });
 
-export const collections = { caseStudies, profile };
+export const collections = { caseStudies, profile, projects };

@@ -16,7 +16,7 @@ const items = getNavigationItems(lang);
 <nav class="bottom-nav" data-nav-indicator aria-label={getUiCopy(lang).accessibility.primaryNavigation}>
   <span class="nav-indicator" aria-hidden="true"></span>
   {items.map((item) => (
-    <Ripple style="border-radius: 999px; width: 100%; z-index: 1; --md-ripple-color: var(--md-on-surface);">
+    <Ripple style="border-radius: 999px; width: 100%; z-index: 1; --md-ripple-color: var(--md-nav-on-surface);">
       <a
         class:list={['bottom-nav__item', 'md-state-layer', { active: activeRoute === item.route }]}
         data-nav-item
@@ -33,15 +33,18 @@ const items = getNavigationItems(lang);
 <style>
   .bottom-nav {
     align-items: center;
-    background: var(--md-surface-container);
-    bottom: 0;
+    background: var(--md-nav-surface);
+    border: 1px solid var(--md-nav-outline);
+    border-radius: 28px;
+    bottom: 12px;
+    box-shadow: 0 20px 48px -20px var(--md-nav-shadow);
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    height: 80px;
-    left: 0;
-    padding: 10px 8px;
+    grid-template-columns: repeat(5, 1fr);
+    height: 72px;
+    left: 12px;
+    padding: 8px 6px;
     position: fixed;
-    right: 0;
+    right: 12px;
     z-index: 20;
     view-transition-name: bottom-nav;
   }
@@ -49,7 +52,7 @@ const items = getNavigationItems(lang);
   .bottom-nav__item {
     align-items: center;
     border-radius: 999px;
-    color: var(--md-on-surface);
+    color: var(--md-nav-on-surface-variant);
     display: flex;
     flex-direction: column;
     font: 500 11px/16px var(--md-font-family);
@@ -59,7 +62,9 @@ const items = getNavigationItems(lang);
     text-decoration: none;
   }
 
-  .bottom-nav__item[aria-current='page'] { --app-icon-active-color: var(--md-on-primary-container); color: var(--md-on-primary-container); }
+  .bottom-nav__item[aria-current='page'] { --app-icon-active-color: var(--md-nav-on-selected); color: var(--md-nav-on-selected); }
+  .bottom-nav :global(.nav-indicator) { background: var(--md-nav-selected); }
+  .bottom-nav:not([data-indicator='js']) .bottom-nav__item[aria-current='page'] { background: var(--md-nav-selected); }
 
   @media (min-width: 600px) {
     .bottom-nav { display: none; }

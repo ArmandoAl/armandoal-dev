@@ -7,6 +7,7 @@ import TopAppBar from '@core/widgets/TopAppBar.astro';
 import { caseMetaName, caseTitleName } from '@core/utils/view_transition';
 import { caseAccentStyle } from '@core/theme/case_accents';
 import ProjectGallery from '../widgets/ProjectGallery.astro';
+import MetricCard from '@features/home/presentation/widgets/MetricCard.astro';
 
 interface Props { slug: string; lang: Locale; }
 
@@ -37,7 +38,7 @@ const alternatePath = ROUTE_NAMES[alternateLang].workDetail(alternateStudy.data.
           <section class="md-reveal md-enter md-enter-4"><h2 class="md-headline-medium">{ui.sections.context}</h2><p class="md-body-large">{data.context}</p></section>
           <section class="md-reveal"><h2 class="md-headline-medium">{ui.sections.problem}</h2><p class="md-body-large">{data.problem}</p></section>
           <section class="md-reveal"><h2 class="md-headline-medium">{ui.sections.approach}</h2><ul class="approach">{data.approach.map((item) => <li class="md-body-large">{item}</li>)}</ul></section>
-          <ProjectGallery gallery={data.gallery} />
+          <ProjectGallery gallery={data.gallery} closeLabel={ui.accessibility.closeDialog} mobileScreenshotsLabel={ui.accessibility.mobileScreenshots} />
           <section class="md-reveal"><h2 class="md-headline-medium">{ui.sections.constraints}</h2><p class="md-body-large">{data.constraints}</p></section>
           <section class="md-reveal"><h2 class="md-headline-medium">{ui.sections.outcome}</h2><p class="md-body-large">{data.outcome}</p></section>
         </div>
@@ -56,7 +57,7 @@ const alternatePath = ROUTE_NAMES[alternateLang].workDetail(alternateStudy.data.
         <section class="case-study__metrics md-reveal md-enter md-enter-2" aria-labelledby="metrics-title">
           <h2 id="metrics-title" class="md-headline-medium">{ui.sections.metrics}</h2>
           <div class="metrics">
-            {data.metrics.map((metric, index) => <div class="md-elevation-2" style={`--md-metric-delay: ${index * 40}ms;`}><strong class="md-display-small md-metric-value">{metric.value}</strong><span class="md-label-large">{metric.label}</span></div>)}
+            {data.metrics.map((metric, index) => <MetricCard {...metric} delay={index * 40} featured={index === 0} />)}
           </div>
         </section>
       </div>
@@ -125,9 +126,6 @@ const alternatePath = ROUTE_NAMES[alternateLang].workDetail(alternateStudy.data.
   section p, .approach { color: var(--md-on-surface-variant); margin-block: 0; }
   section p, .approach li { max-width: 68ch; }
   .metrics { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
-  .metrics div { background: var(--md-surface-container); border-left: 3px solid var(--case-accent); border-radius: 18px; display: grid; gap: 6px; padding: 20px; }
-  .metrics strong { color: var(--case-accent); }
-  .metrics span { color: var(--md-on-surface-variant); }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
   .chips li { background: transparent; border: 1px solid var(--md-outline-variant); border-radius: 999px; color: var(--md-on-surface); padding: 6px 12px; }
   .chips li:nth-child(-n+3) { background: var(--case-accent-container); border-color: transparent; color: var(--case-on-accent-container); }
@@ -148,14 +146,15 @@ const alternatePath = ROUTE_NAMES[alternateLang].workDetail(alternateStudy.data.
       column-gap: 48px;
       grid-template-areas:
         'header rail'
-        'metrics metrics'
-        'narrative narrative';
+        'metrics rail'
+        'narrative rail';
       grid-template-columns: minmax(0, 68ch) 320px;
     }
     .case-study__rail {
       display: flex;
       flex-direction: column;
       grid-area: rail;
+      grid-row: 1 / 4;
       position: sticky;
       top: 96px;
       width: 320px;
@@ -163,5 +162,7 @@ const alternatePath = ROUTE_NAMES[alternateLang].workDetail(alternateStudy.data.
     .meta { flex-direction: column; gap: 8px; }
     .case-study__header { max-width: 68ch; min-width: 0; padding-block: 40px 64px; }
     .case-study__narrative { max-width: 68ch; min-width: 0; }
+    .case-study__metrics-band { border-radius: 28px; margin: 0; padding: 36px; }
+    .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 </style>

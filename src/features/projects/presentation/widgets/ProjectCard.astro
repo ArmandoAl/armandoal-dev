@@ -1,0 +1,80 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ROUTE_NAMES } from '@app/router/route_names';
+import AppIcon from '@core/widgets/AppIcon.astro';
+import Ripple from '@core/widgets/Ripple.astro';
+import { projectMetaName, projectTitleName } from '@core/utils/view_transition';
+import type { Locale } from '@core/utils/i18n';
+import { Image } from 'astro:assets';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  lang: Locale;
+}
+
+const { project, lang } = Astro.props;
+const { data } = project;
+const thumbnail = data.gallery?.[0];
+const visibleStack = data.stack.slice(0, 4);
+const remainingStack = data.stack.length - visibleStack.length;
+---
+
+<Ripple style="border-radius: 24px; display: block; height: 100%; width: 100%; --md-ripple-color: var(--md-on-surface);">
+  <a class:list={['project-card', 'md-state-layer', { 'project-card--with-thumbnail': thumbnail, 'project-card--reverse': thumbnail && data.order % 2 === 0 }]} href={ROUTE_NAMES[lang].projectDetail(data.slug)}>
+    {thumbnail && (
+      <div class:list={['project-card__thumbnail', `project-card__thumbnail--${thumbnail.kind}`]}>
+        <Image src={thumbnail.src} alt={thumbnail.alt} width={thumbnail.src.width} height={thumbnail.src.height} widths={[480, 720]} sizes="(max-width: 759px) 100vw, 48vw" format="webp" loading="lazy" decoding="async" />
+      </div>
+    )}
+    <div class="project-card__content">
+      <div class="project-card__top">
+        <AppIcon name="github" size={28} state="active" />
+        <span class="project-card__meta md-label-medium" style={`view-transition-name: ${projectMetaName(data.slug)};`}>
+          {data.language && <span>{data.language}</span>}
+          {data.stars > 0 && <span class="stars"><AppIcon name="star-filled" size={16} state="active" /> {data.stars}</span>}
+        </span>
+        <AppIcon name="arrow-right" size={20} state="inactive" />
+      </div>
+      <h3 class="md-headline-medium" style={`view-transition-name: ${projectTitleName(data.slug)};`}>{data.name}</h3>
+      <p class="md-body-large">{data.summary}</p>
+      <ul aria-label="Stack">
+        {visibleStack.map((item) => <li class="md-label-small">{item}</li>)}
+        {remainingStack > 0 && <li class="md-label-small">+{remainingStack}</li>}
+      </ul>
+    </div>
+  </a>
+</Ripple>
+
+<style>
+  .project-card { background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); border-radius: 24px; color: var(--md-on-surface); display: grid; gap: 28px; height: 100%; min-height: 320px; padding: 28px; text-decoration: none; transition: border-color var(--md-duration-short) var(--md-easing-standard), transform var(--md-duration-short) var(--md-easing-standard); }
+  .project-card__content { align-content: start; display: grid; gap: 16px; min-width: 0; }
+  .project-card__thumbnail { aspect-ratio: 16 / 10; background: var(--md-surface-container-high); border-radius: 18px; overflow: hidden; }
+  .project-card__thumbnail img { display: block; height: 100%; object-fit: cover; width: 100%; }
+  .project-card__thumbnail--mobile img { object-position: center 18%; }
+  .project-card__top { align-items: center; display: grid; gap: 12px; grid-template-columns: auto 1fr auto; }
+  .project-card__top > :first-child { --app-icon-active-color: var(--md-tertiary); }
+  .project-card__meta { align-items: center; color: var(--md-on-surface-variant); display: flex; flex-wrap: wrap; gap: 12px; }
+  .stars { align-items: center; display: inline-flex; gap: 4px; }
+  .stars .app-icon { --app-icon-active-color: var(--md-tertiary); }
+  h3 { color: var(--md-on-surface); }
+  p { color: var(--md-on-surface-variant); display: -webkit-box; margin: 0; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 5; }
+  ul { align-self: end; display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
+  li { background: color-mix(in srgb, var(--md-tertiary-container) 72%, var(--md-surface-container)); border-radius: 999px; color: var(--md-on-tertiary-container); padding: 5px 10px; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .project-card:hover { background: var(--md-surface-container-high); border-color: var(--md-tertiary); }
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .project-card:hover { transform: translateY(-2px); }
+  }
+
+  @media (min-width: 760px) {
+    .project-card--with-thumbnail { align-items: stretch; grid-template-columns: minmax(0, 1fr) minmax(300px, 48%); min-height: 380px; }
+    .project-card--with-thumbnail .project-card__thumbnail { aspect-ratio: auto; grid-column: 2; grid-row: 1; min-height: 320px; }
+    .project-card--with-thumbnail .project-card__content { align-self: center; grid-column: 1; grid-row: 1; }
+    .project-card--with-thumbnail.project-card--reverse { grid-template-columns: minmax(300px, 48%) minmax(0, 1fr); }
+    .project-card--with-thumbnail.project-card--reverse .project-card__thumbnail { grid-column: 1; }
+    .project-card--with-thumbnail.project-card--reverse .project-card__content { grid-column: 2; }
+  }
+</style>

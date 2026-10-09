@@ -13,20 +13,25 @@ interface Props {
 
 const { lang, activeRoute, canonicalPath, alternatePath } = Astro.props;
 const items = getNavigationItems(lang);
+const primaryItems = items.filter(({ route }) => route !== 'contact');
+const contactItem = items.find(({ route }) => route === 'contact')!;
 const ui = getUiCopy(lang);
 ---
 
 <span class="top-nav-sentinel" data-top-nav-sentinel aria-hidden="true"></span>
 <nav class="top-nav" data-nav-indicator aria-label={ui.accessibility.primaryNavigation}>
   <span class="nav-indicator" aria-hidden="true"></span>
-  <a class="top-nav__owner md-state-layer" href={items[0].href} aria-label="Armando Alvarado — Home">
-    <span class="md-title-medium">Armando Alvarado</span>
-    <span class="md-label-small">Flutter developer</span>
+  <a class="top-nav__owner md-state-layer" href={items[0].href} aria-label={`Armando Alvarado - ${ui.nav.home}`}>
+    <span class="top-nav__mark md-label-large" aria-hidden="true">AA</span>
+    <span class="top-nav__owner-copy">
+      <span class="md-title-medium">Armando</span>
+      <span class="md-label-small">Flutter engineer</span>
+    </span>
   </a>
 
   <div class="top-nav__items">
-    {items.map((item) => (
-      <Ripple style="border-radius: 999px; z-index: 1; --md-ripple-color: var(--md-on-surface);">
+    {primaryItems.map((item) => (
+      <Ripple style="border-radius: 999px; z-index: 1; --md-ripple-color: var(--md-nav-on-surface);">
         <a
           class="top-nav__item md-state-layer"
           data-nav-item
@@ -48,6 +53,9 @@ const ui = getUiCopy(lang);
       <a class="md-state-layer" href={lang === 'en' ? canonicalPath : alternatePath} aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
       <a class="md-state-layer" href={lang === 'es' ? canonicalPath : alternatePath} aria-current={lang === 'es' ? 'true' : undefined}>ES</a>
     </div>
+    <Ripple style="border-radius: 999px; z-index: 1; --md-ripple-color: var(--md-nav-on-selected);">
+      <a class="top-nav__contact md-label-large md-state-layer" data-nav-item href={contactItem.href} aria-current={activeRoute === 'contact' ? 'page' : undefined}>{contactItem.label}</a>
+    </Ripple>
   </div>
 </nav>
 
@@ -56,31 +64,48 @@ const ui = getUiCopy(lang);
 
   .top-nav {
     align-items: center;
-    background: var(--md-surface-container);
+    background: var(--md-nav-surface);
+    border: 1px solid var(--md-nav-outline);
+    border-radius: 999px;
+    box-shadow: 0 24px 56px -24px var(--md-nav-shadow);
     display: none;
-    gap: 20px;
+    gap: 12px;
     height: 64px;
-    left: 0;
-    padding: 0 24px;
+    left: 50%;
+    padding: 0 10px;
     position: fixed;
-    right: 0;
-    top: 0;
-    transition: background-color var(--md-duration-short) var(--md-easing-standard);
+    top: 16px;
+    transform: translateX(-50%);
+    transition: box-shadow var(--md-duration-medium) var(--md-easing-standard), transform var(--md-duration-medium) var(--md-easing-standard);
     view-transition-name: top-nav;
+    width: min(calc(100% - 32px), 1120px);
     z-index: 20;
   }
 
-  .top-nav--elevated { background: var(--md-surface-container-high); }
-  .top-nav__owner { color: var(--md-on-surface); display: grid; flex: 0 0 auto; line-height: 1.1; padding: 6px 8px; text-decoration: none; }
-  .top-nav__owner .md-label-small { color: var(--md-on-surface-variant); }
+  .top-nav--elevated { box-shadow: 0 28px 64px -22px var(--md-nav-shadow); transform: translate(-50%, -3px); }
+  .top-nav__owner { align-items: center; border-radius: 999px; color: var(--md-nav-on-surface); display: flex; flex: 0 0 auto; gap: 10px; padding: 4px; text-decoration: none; }
+  .top-nav__mark { align-items: center; background: var(--md-primary-container); border-radius: 50%; color: var(--md-on-primary-container); display: flex; height: 44px; justify-content: center; width: 44px; }
+  .top-nav__owner-copy { display: grid; line-height: 1.1; padding-right: 6px; }
+  .top-nav__owner .md-label-small { color: var(--md-nav-on-surface-variant); }
   .top-nav__items { display: flex; gap: 4px; margin-left: auto; }
-  .top-nav__item { align-items: center; border-radius: 999px; color: var(--md-on-surface); display: flex; font: 500 14px/20px var(--md-font-family); gap: 8px; height: 48px; padding: 0 14px; text-decoration: none; }
-  .top-nav__item[aria-current='page'] { color: var(--md-on-primary-container); }
-  .top-nav__item[aria-current='page'] { --app-icon-active-color: var(--md-on-primary-container); }
-  .top-nav__actions { align-items: center; display: flex; flex: 0 0 auto; gap: 8px; }
+  .top-nav__item { align-items: center; border-radius: 999px; color: var(--md-nav-on-surface-variant); display: flex; font: 600 14px/20px var(--md-font-family); gap: 8px; height: 46px; padding: 0 14px; text-decoration: none; }
+  .top-nav__item[aria-current='page'] { color: var(--md-nav-on-selected); }
+  .top-nav__item[aria-current='page'] { --app-icon-active-color: var(--md-nav-on-selected); }
+  .top-nav__actions { align-items: center; display: flex; flex: 0 0 auto; gap: 6px; position: relative; z-index: 1; }
+  .top-nav .icon-button, .top-nav .language-switcher { background: transparent; border-color: var(--md-nav-outline); color: var(--md-nav-on-surface); }
+  .top-nav .language-switcher a { color: var(--md-nav-on-surface-variant); }
+  .top-nav .language-switcher a[aria-current] { background: var(--md-nav-selected); color: var(--md-nav-on-selected); }
+  .top-nav__contact { align-items: center; background: var(--md-nav-selected); border-radius: 999px; color: var(--md-nav-on-selected); display: flex; height: 46px; padding: 0 20px; text-decoration: none; }
+  .top-nav :global(.nav-indicator) { background: var(--md-nav-selected); }
 
   @media (min-width: 840px) {
     .top-nav { display: flex; }
+  }
+
+  @media (min-width: 840px) and (max-width: 1059px) {
+    .top-nav { gap: 8px; }
+    .top-nav__owner-copy, .top-nav__item :global(.app-icon) { display: none; }
+    .top-nav__item { padding-inline: 11px; }
   }
 </style>
 

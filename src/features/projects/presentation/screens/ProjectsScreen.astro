@@ -1,0 +1,31 @@
+---
+import AppShell from '@app/shell/AppShell.astro';
+import { ROUTE_NAMES } from '@app/router/route_names';
+import { getUiCopy, type Locale } from '@core/utils/i18n';
+import NextSectionCard from '@core/widgets/NextSectionCard.astro';
+import { getAll } from '@features/projects/data/repositories/project_repository';
+import ProjectCard from '../widgets/ProjectCard.astro';
+
+interface Props { lang: Locale; }
+
+const { lang } = Astro.props;
+const projects = await getAll(lang);
+const ui = getUiCopy(lang);
+---
+
+<AppShell title={ui.sections.openSource} description={ui.sections.openSourceDescription} {lang} activeRoute="projects">
+  <header class="md-enter md-enter-1">
+    <p class="md-label-large">{ui.nav.projects}</p>
+    <h1 class="md-display-medium">{ui.sections.openSource}</h1>
+  </header>
+  <div class="project-grid md-enter md-enter-2">
+    {projects.map((project) => <ProjectCard {project} {lang} />)}
+  </div>
+  <div class="md-enter md-enter-3"><NextSectionCard href={ROUTE_NAMES[lang].about} label={ui.nextSection.label} title={ui.nav.about} description={ui.nextSection.about} /></div>
+</AppShell>
+
+<style>
+  header { padding-block: 40px 48px; }
+  header p { color: var(--md-tertiary); margin-bottom: 12px; text-transform: uppercase; }
+  .project-grid { display: grid; gap: 32px; }
+</style>

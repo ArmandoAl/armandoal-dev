@@ -1,0 +1,12 @@
+---
+import ProjectScreen from '@features/projects/presentation/screens/ProjectScreen.astro';
+import { getAllSlugs } from '@features/projects/data/repositories/project_repository';
+
+export async function getStaticPaths() {
+  return (await getAllSlugs('es')).map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+---
+
+<ProjectScreen lang="es" slug={slug!} />
