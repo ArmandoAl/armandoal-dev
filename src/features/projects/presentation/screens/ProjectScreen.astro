@@ -53,6 +53,13 @@ const alternatePath = ROUTE_NAMES[alternateLang].projectDetail(alternateProject.
           <ul class="highlights">{data.highlights.map((item) => <li class="md-body-large">{item}</li>)}</ul>
         </section>
         <ProjectGallery gallery={data.gallery} closeLabel={ui.accessibility.closeDialog} mobileScreenshotsLabel={ui.accessibility.mobileScreenshots} />
+        {data.slug === 'her-notes' && data.homepageUrl && (
+          <section aria-labelledby="demo-title">
+            <h2 id="demo-title" class="md-headline-medium">{lang === 'es' ? 'Prueba interactiva' : 'Interactive demo'}</h2>
+            <iframe class="project__demo" src={data.homepageUrl} title={lang === 'es' ? 'Demo interactiva de HerNotes' : 'HerNotes interactive demo'} loading="lazy"></iframe>
+            <p><a href={data.homepageUrl} target="_blank" rel="noopener noreferrer">{ui.actions.viewLive}</a></p>
+          </section>
+        )}
       </div>
 
       <aside class="project__rail md-reveal md-enter md-enter-3">
@@ -75,6 +82,7 @@ const alternatePath = ROUTE_NAMES[alternateLang].projectDetail(alternateProject.
   .project__action--primary { background: var(--md-primary); border-color: var(--md-primary); color: var(--md-on-primary); }
   .project__action--primary .app-icon { --app-icon-active-color: currentColor; }
   .project__layout { display: grid; gap: 32px; }
+  .project__demo { border: 1px solid var(--md-outline-variant); border-radius: 24px; display: block; height: 640px; max-width: 420px; width: 100%; }
   section { padding-block: 40px; }
   section h2 { color: var(--md-on-surface-variant); letter-spacing: 0.08em; margin-bottom: 16px; text-transform: uppercase; }
   section h2::before { background: var(--case-accent); border-radius: 3px; content: ''; display: block; height: 3px; margin-bottom: 12px; width: 40px; }

@@ -8,6 +8,7 @@ highlights:
   - "Movement collides against a simplified mesh accelerated by a BVH, keeping visual geometry independent from physics geometry."
   - "Spatial audio combines a positional listener with convolution reverb; final assets and real-world performance measurements remain explicitly in progress."
 repoUrl: "https://github.com/ArmandoAl/Diana-Galeria"
+homepageUrl: "https://diana-galeria.vercel.app"
 language: "TypeScript"
 stack:
   - "React"

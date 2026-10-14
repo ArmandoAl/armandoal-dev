@@ -8,6 +8,7 @@ highlights:
   - "Screens depend on Providers and services rather than networking; one HTTP client switches between the Azure API and an in-memory demo store."
   - "A bottom-navigation shell keeps each role's main views alive with IndexedStack, while focused writing and review tasks open as stacked routes."
 repoUrl: "https://github.com/ArmandoAl/HerNotes"
+homepageUrl: "https://hernotes.web.app/#/home"
 language: "JavaScript"
 stack:
   - "Flutter"

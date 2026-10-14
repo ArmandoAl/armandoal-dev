@@ -11,7 +11,7 @@ const stripIconMotion = () => ({
 });
 
 export default defineConfig({
-  site: 'https://armandoal.dev',
+  site: 'https://armandoal-dev.vercel.app',
   output: 'static',
   integrations: [icon({ include: { 'line-md': ['home', 'briefcase', 'account', 'email', 'arrow-left', 'arrow-right', 'download-outline', 'external-link', 'github', 'linkedin', 'moon', 'star-filled', 'sunny'] } })],
   vite: { plugins: [stripIconMotion()] },

@@ -8,6 +8,7 @@ highlights:
   - "Las pantallas dependen de Providers y servicios, no de la red; un solo cliente HTTP alterna entre la API de Azure y un almacén de demostración en memoria."
   - "Un shell con navegación inferior conserva vivas las vistas principales de cada rol mediante IndexedStack, mientras las tareas enfocadas se abren como rutas apiladas."
 repoUrl: "https://github.com/ArmandoAl/HerNotes"
+homepageUrl: "https://hernotes.web.app/#/home"
 language: "JavaScript"
 stack:
   - "Flutter"

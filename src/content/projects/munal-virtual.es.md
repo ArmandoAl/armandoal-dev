@@ -8,6 +8,7 @@ highlights:
   - "El movimiento colisiona contra una malla simplificada acelerada con BVH, manteniendo separadas la geometría visual y la física."
   - "El audio espacial combina un listener posicional con reverberación por convolución; los assets finales y las mediciones de rendimiento real siguen marcados explícitamente como trabajo en curso."
 repoUrl: "https://github.com/ArmandoAl/Diana-Galeria"
+homepageUrl: "https://diana-galeria.vercel.app"
 language: "TypeScript"
 stack:
   - "React"
