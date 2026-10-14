@@ -14,10 +14,10 @@
 }
 
 .md-display-large { font-size: 57px; font-weight: 400; line-height: 64px; letter-spacing: -0.25px; }
-.md-display-medium { font-size: 45px; font-weight: 400; line-height: 52px; letter-spacing: 0; }
+.md-display-medium { font-size: 32px; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; }
 .md-display-small { font-size: 36px; font-weight: 400; line-height: 44px; letter-spacing: 0; }
-.md-headline-large { font-size: 32px; font-weight: 400; line-height: 40px; letter-spacing: 0; }
-.md-headline-medium { font-size: 28px; font-weight: 400; line-height: 36px; letter-spacing: 0; }
+.md-headline-large { font-size: 24px; font-weight: 700; line-height: 32px; letter-spacing: 0; }
+.md-headline-medium { font-size: 24px; font-weight: 700; line-height: 32px; letter-spacing: 0; }
 .md-headline-small { font-size: 24px; font-weight: 400; line-height: 32px; letter-spacing: 0; }
 .md-title-large { font-size: 22px; font-weight: 400; line-height: 28px; letter-spacing: 0; }
 .md-title-medium { font-size: 16px; font-weight: 500; line-height: 24px; letter-spacing: 0.15px; }

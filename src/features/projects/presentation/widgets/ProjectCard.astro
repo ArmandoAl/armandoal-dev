@@ -19,8 +19,8 @@ const visibleStack = data.stack.slice(0, 4);
 const remainingStack = data.stack.length - visibleStack.length;
 ---
 
-<Ripple style="border-radius: 24px; display: block; height: 100%; width: 100%; --md-ripple-color: var(--md-on-surface);">
-  <a class:list={['project-card', 'md-state-layer', { 'project-card--with-thumbnail': thumbnail, 'project-card--reverse': thumbnail && data.order % 2 === 0 }]} href={ROUTE_NAMES[lang].projectDetail(data.slug)}>
+<Ripple style="border-radius: 30px; display: block; height: 100%; width: 100%; --md-ripple-color: var(--md-on-surface);">
+  <a class:list={['project-card', 'md-state-layer', { 'project-card--with-thumbnail': thumbnail }]} href={ROUTE_NAMES[lang].projectDetail(data.slug)}>
     {thumbnail && (
       <div class:list={['project-card__thumbnail', `project-card__thumbnail--${thumbnail.kind}`]}>
         <Image src={thumbnail.src} alt={thumbnail.alt} width={thumbnail.src.width} height={thumbnail.src.height} widths={[480, 720]} sizes="(max-width: 759px) 100vw, 48vw" format="webp" loading="lazy" decoding="async" />
@@ -41,40 +41,42 @@ const remainingStack = data.stack.length - visibleStack.length;
         {visibleStack.map((item) => <li class="md-label-small">{item}</li>)}
         {remainingStack > 0 && <li class="md-label-small">+{remainingStack}</li>}
       </ul>
+      <span class="project-card__cta">{lang === 'es' ? 'Ver proyecto' : 'View project'}<AppIcon name="arrow-right" size={24} state="active" /></span>
     </div>
   </a>
 </Ripple>
 
 <style>
-  .project-card { background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); border-radius: 24px; color: var(--md-on-surface); display: grid; gap: 28px; height: 100%; min-height: 320px; padding: 28px; text-decoration: none; transition: border-color var(--md-duration-short) var(--md-easing-standard), transform var(--md-duration-short) var(--md-easing-standard); }
+  .project-card { background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); border-radius: 30px; color: var(--md-on-surface); display: grid; gap: 28px; min-height: 320px; min-width: 0; overflow: hidden; padding: 28px; text-decoration: none; transition: border-color 240ms var(--md-easing-standard), background-color 240ms var(--md-easing-standard), transform 360ms var(--md-easing-emphasized-decelerate), box-shadow 360ms var(--md-easing-emphasized-decelerate); }
   .project-card__content { align-content: start; display: grid; gap: 16px; min-width: 0; }
-  .project-card__thumbnail { aspect-ratio: 16 / 10; background: var(--md-surface-container-high); border-radius: 18px; overflow: hidden; }
-  .project-card__thumbnail img { display: block; height: 100%; object-fit: cover; width: 100%; }
-  .project-card__thumbnail--mobile img { object-position: center 18%; }
+  .project-card__thumbnail { aspect-ratio: 16 / 10; background: var(--md-surface-container-high); border-radius: 22px; min-height: 0; min-width: 0; overflow: hidden; }
+  .project-card__thumbnail img { display: block; height: 100%; min-width: 0; object-fit: cover; width: 100%; transition: transform 700ms var(--md-easing-emphasized-decelerate); }
+  .project-card__thumbnail--mobile img { object-fit: contain; padding: clamp(12px, 3vw, 32px); }
+  .project-card__meta { align-items: center; color: var(--md-on-surface-variant); display: flex; flex-wrap: wrap; font-size: 16px; font-weight: 400; gap: 8px 20px; letter-spacing: 0; }
   .project-card__top { align-items: center; display: grid; gap: 12px; grid-template-columns: auto 1fr auto; }
   .project-card__top > :first-child { --app-icon-active-color: var(--md-tertiary); }
-  .project-card__meta { align-items: center; color: var(--md-on-surface-variant); display: flex; flex-wrap: wrap; gap: 12px; }
   .stars { align-items: center; display: inline-flex; gap: 4px; }
   .stars .app-icon { --app-icon-active-color: var(--md-tertiary); }
-  h3 { color: var(--md-on-surface); }
-  p { color: var(--md-on-surface-variant); display: -webkit-box; margin: 0; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 5; }
-  ul { align-self: end; display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
-  li { background: color-mix(in srgb, var(--md-tertiary-container) 72%, var(--md-surface-container)); border-radius: 999px; color: var(--md-on-tertiary-container); padding: 5px 10px; }
+  h3 { color: var(--md-on-surface); font-size: clamp(24px, 2.2vw, 34px); font-weight: 700; letter-spacing: -0.035em; line-height: 1.12; overflow-wrap: anywhere; }
+  p { color: var(--md-on-surface-variant); display: -webkit-box; letter-spacing: 0; line-height: 1.65; margin: 0; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 4; }
+  ul { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
+  li { background: color-mix(in srgb, var(--md-tertiary-container) 72%, var(--md-surface-container)); border-radius: 999px; color: var(--md-on-tertiary-container); font-size: 16px; font-weight: 400; letter-spacing: 0; padding: 5px 10px; white-space: nowrap; }
+  .project-card__cta { --app-icon-active-color: currentColor; align-items: center; background: var(--md-primary); border-radius: 999px; color: var(--md-on-primary); display: flex; font-size: 16px; font-weight: 700; gap: 16px; justify-content: space-between; margin-top: 8px; min-height: 56px; padding: 0 22px; transition: gap 240ms var(--md-easing-emphasized-decelerate), filter 240ms ease; }
+  .project-card:focus-visible { outline: 3px solid var(--md-primary); outline-offset: 5px; }
 
-  @media (hover: hover) and (pointer: fine) {
-    .project-card:hover { background: var(--md-surface-container-high); border-color: var(--md-tertiary); }
+  @media (min-width: 760px) {
+    .project-card--with-thumbnail { align-items: stretch; gap: clamp(28px, 4vw, 64px); grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr); min-height: 440px; padding: clamp(32px, 5vw, 72px); }
+    .project-card--with-thumbnail .project-card__thumbnail { aspect-ratio: 1.38; grid-column: 2; grid-row: 1; height: 100%; max-height: 560px; min-height: 320px; width: 100%; }
+    .project-card--with-thumbnail .project-card__content { align-self: center; gap: 20px; grid-column: 1; grid-row: 1; }
+  }
+
+  @media (max-width: 759px) {
+    .project-card { gap: 24px; grid-template-columns: minmax(0, 1fr); padding: 24px; }
   }
 
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    .project-card:hover { transform: translateY(-2px); }
-  }
-
-  @media (min-width: 760px) {
-    .project-card--with-thumbnail { align-items: stretch; grid-template-columns: minmax(0, 1fr) minmax(300px, 48%); min-height: 380px; }
-    .project-card--with-thumbnail .project-card__thumbnail { aspect-ratio: auto; grid-column: 2; grid-row: 1; min-height: 320px; }
-    .project-card--with-thumbnail .project-card__content { align-self: center; grid-column: 1; grid-row: 1; }
-    .project-card--with-thumbnail.project-card--reverse { grid-template-columns: minmax(300px, 48%) minmax(0, 1fr); }
-    .project-card--with-thumbnail.project-card--reverse .project-card__thumbnail { grid-column: 1; }
-    .project-card--with-thumbnail.project-card--reverse .project-card__content { grid-column: 2; }
+    .project-card:hover { border-color: var(--md-primary); box-shadow: 0 28px 72px -38px color-mix(in srgb, var(--md-primary) 55%, transparent); transform: translateY(-5px); }
+    .project-card:hover .project-card__thumbnail img { transform: scale(1.035); }
+    .project-card:hover .project-card__cta { filter: brightness(1.08); gap: 24px; }
   }
 </style>

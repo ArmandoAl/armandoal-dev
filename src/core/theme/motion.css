@@ -18,6 +18,17 @@
   opacity: 1;
 }
 
+@keyframes md-enter {
+  from { opacity: 0; transform: translate3d(0, 22px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+.md-enter { animation: md-enter 680ms var(--md-easing-emphasized-decelerate) both; }
+.md-enter-1 { animation-delay: 70ms; }
+.md-enter-2 { animation-delay: 150ms; }
+.md-enter-3 { animation-delay: 230ms; }
+.md-enter-4 { animation-delay: 310ms; }
+
 @supports (animation-timeline: view()) {
   .md-reveal {
     animation: md-reveal linear both;

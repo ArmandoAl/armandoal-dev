@@ -71,7 +71,7 @@ const ui = getUiCopy(lang);
   .profile { margin: auto; max-width: 1200px; }
   header { padding-block: 40px 64px; }
   .eyebrow, .meta { color: var(--md-primary); }
-  .summary { color: var(--md-on-surface-variant); margin-block: 24px; max-width: 68ch; }
+  .summary { color: var(--md-on-surface-variant); font-size: 16px; letter-spacing: 0; line-height: 1.5; margin-block: 24px; max-width: 68ch; }
   .cv-actions { display: flex; flex-wrap: wrap; gap: 12px; }
   .button { --app-icon-active-color: var(--md-on-primary-container); align-items: center; background: var(--md-primary-container); border-radius: 999px; color: var(--md-on-primary-container); display: inline-flex; gap: 8px; padding: 12px 20px; text-decoration: none; }
   section { padding-block: 40px; }
@@ -89,7 +89,7 @@ const ui = getUiCopy(lang);
   .details-grid p { color: var(--md-on-surface-variant); }
   .profile-support { min-width: 0; }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 840px) {
     .profile-grid { align-items: start; display: grid; gap: 48px; grid-template-columns: minmax(0, 1fr) 360px; }
     .profile-support { background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); border-radius: 28px; margin-top: 40px; padding: 8px 28px 28px; }
     .profile-support section { padding-block: 32px; }

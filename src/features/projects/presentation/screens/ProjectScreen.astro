@@ -76,7 +76,7 @@ const alternatePath = ROUTE_NAMES[alternateLang].projectDetail(alternateProject.
   .project { margin: auto; max-width: 880px; }
   .project__header { padding-block: 40px 56px; }
   .project__meta { color: var(--case-accent); display: flex; gap: 16px; margin-bottom: 12px; text-transform: uppercase; }
-  .summary { color: var(--md-on-surface-variant); margin: 24px 0 32px; max-width: 68ch; }
+  .summary { color: var(--md-on-surface-variant); font-size: 16px; letter-spacing: 0; line-height: 1.5; margin: 24px 0 32px; max-width: 68ch; }
   .project__actions { display: flex; flex-wrap: wrap; gap: 12px; }
   .project__action { align-items: center; border: 1px solid var(--md-outline); border-radius: 999px; color: var(--md-on-surface); display: inline-flex; gap: 8px; padding: 13px 20px; text-decoration: none; }
   .project__action--primary { background: var(--md-primary); border-color: var(--md-primary); color: var(--md-on-primary); }
@@ -92,7 +92,10 @@ const alternatePath = ROUTE_NAMES[alternateLang].projectDetail(alternateProject.
 
   @media (min-width: 1200px) {
     .project { max-width: none; }
-    .project__layout { align-items: start; grid-template-columns: minmax(0, 68ch) 320px; gap: 48px; }
+  }
+
+  @media (min-width: 1024px) {
+    .project__layout { align-items: start; grid-template-columns: minmax(0, 1fr) 320px; gap: 48px; }
     .project__rail { position: sticky; top: 96px; }
   }
 </style>
