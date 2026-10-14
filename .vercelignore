@@ -1,0 +1,11 @@
+node_modules/
+.git/
+.astro/
+.audit/
+.firebase/
+dist/
+.env*
+.DS_Store
+apps/
+docs/
+design-qa.md
