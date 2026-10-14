@@ -70,9 +70,11 @@ const swipeNext = sectionIndex >= 0 && sectionIndex < sectionPaths.length - 1 ? 
   </head>
   <body data-swipe-previous={swipePrevious} data-swipe-next={swipeNext}>
     <script is:inline data-astro-rerun>
-      let showSplash = true;
-      try { showSplash = sessionStorage.getItem('armando-splash-seen') !== 'true'; } catch {}
-      document.documentElement.toggleAttribute('data-splash-active', showSplash);
+      (() => {
+        let showSplash = true;
+        try { showSplash = sessionStorage.getItem('armando-splash-seen') !== 'true'; } catch {}
+        document.documentElement.toggleAttribute('data-splash-active', showSplash);
+      })();
     </script>
     <div class="app-splash" data-app-splash aria-hidden="true">
       <span class="app-splash__mark md-title-large">AA</span>
