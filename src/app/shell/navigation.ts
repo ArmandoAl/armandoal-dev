@@ -7,7 +7,7 @@ export type AppRoute = 'home' | 'work' | 'projects' | 'about' | 'contact';
 const ICONS: Record<AppRoute, string> = {
   home: 'home',
   work: 'briefcase',
-  projects: 'github',
+  projects: 'briefcase',
   about: 'account',
   contact: 'email',
 };
@@ -16,7 +16,7 @@ export function getNavigationItems(lang: Language) {
   const routes = ROUTE_NAMES[lang];
   const labels = getUiCopy(lang).nav;
 
-  return (['home', 'work', 'projects', 'about', 'contact'] as const).map((route) => ({
+  return (['home', 'projects', 'contact'] as const).map((route) => ({
     route,
     href: routes[route],
     label: labels[route],

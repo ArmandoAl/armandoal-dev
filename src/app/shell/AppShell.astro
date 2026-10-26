@@ -32,7 +32,7 @@ const spanishUrl = toUrl(lang === 'es' ? canonicalPath : alternatePath);
 const locale = lang === 'en' ? 'en_US' : 'es_MX';
 const alternateLocale = lang === 'en' ? 'es_MX' : 'en_US';
 const ui = getUiCopy(lang);
-const sectionPaths: string[] = [ROUTE_NAMES[lang].home, ROUTE_NAMES[lang].work, ROUTE_NAMES[lang].projects, ROUTE_NAMES[lang].about, ROUTE_NAMES[lang].contact];
+const sectionPaths: string[] = [ROUTE_NAMES[lang].home, ROUTE_NAMES[lang].projects, ROUTE_NAMES[lang].contact];
 const sectionIndex = sectionPaths.indexOf(canonicalPath);
 const swipePrevious = sectionIndex > 0 ? sectionPaths[sectionIndex - 1] : undefined;
 const swipeNext = sectionIndex >= 0 && sectionIndex < sectionPaths.length - 1 ? sectionPaths[sectionIndex + 1] : undefined;
@@ -80,7 +80,7 @@ const swipeNext = sectionIndex >= 0 && sectionIndex < sectionPaths.length - 1 ? 
       <span class="app-splash__mark md-title-large">AA</span>
       <span class="app-splash__copy">
         <strong class="md-title-large">Armando Alvarado</strong>
-        <span class="md-label-large">{lang === 'es' ? 'Ingeniero Flutter' : 'Flutter engineer'}</span>
+        <span class="md-label-large">{lang === 'es' ? 'Ingeniero de software' : 'Software engineer'}</span>
       </span>
       <progress max="100" value="100"></progress>
     </div>

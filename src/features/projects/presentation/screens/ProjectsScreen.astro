@@ -21,7 +21,7 @@ const ui = getUiCopy(lang);
   <div class="project-grid md-enter md-enter-2">
     {projects.map((project) => <ProjectCard {project} {lang} />)}
   </div>
-  <div class="md-enter md-enter-3"><NextSectionCard href={ROUTE_NAMES[lang].about} label={ui.nextSection.label} title={ui.nav.about} description={ui.nextSection.about} /></div>
+  <div class="md-enter md-enter-3"><NextSectionCard href={ROUTE_NAMES[lang].contact} label={ui.nextSection.label} title={ui.nav.contact} description={ui.nextSection.contact} /></div>
 </AppShell>
 
 <style>

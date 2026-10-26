@@ -3,7 +3,7 @@ slug: automotive-marketplace
 translationKey: automotive-marketplace
 lang: es
 title: "Migrar 7 años de código nativo a Flutter — sin detener el roadmap"
-client: "Plataforma de marketplace automotriz (bajo NDA)"
+client: "MaxiPublica"
 role: "Flutter Developer / Mobile Lead"
 period: "Mayo 2024 – Actualidad"
 summary: "Unifiqué una base de código Android e iOS con siete años de historia en una sola aplicación Flutter durante 14 meses, entregando siete módulos de producto nuevos en paralelo para que el negocio nunca tuviera que dejar de liberar funcionalidades."

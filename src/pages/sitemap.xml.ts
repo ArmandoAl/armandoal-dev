@@ -15,16 +15,12 @@ export const GET: APIRoute = async () => {
   const paths = [
     ROUTE_NAMES.en.home,
     ROUTE_NAMES.es.home,
-    ROUTE_NAMES.en.work,
-    ROUTE_NAMES.es.work,
     ...englishSlugs.map(ROUTE_NAMES.en.workDetail),
     ...spanishSlugs.map(ROUTE_NAMES.es.workDetail),
     ROUTE_NAMES.en.projects,
     ROUTE_NAMES.es.projects,
     ...englishProjectSlugs.map(ROUTE_NAMES.en.projectDetail),
     ...spanishProjectSlugs.map(ROUTE_NAMES.es.projectDetail),
-    ROUTE_NAMES.en.about,
-    ROUTE_NAMES.es.about,
     ROUTE_NAMES.en.contact,
     ROUTE_NAMES.es.contact,
   ];

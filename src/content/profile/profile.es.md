@@ -1,14 +1,16 @@
 ---
 lang: es
 name: "Armando Alvarado"
-headline: "Ingeniero Mobile — Flutter y migración de código nativo legacy"
-summary: "Construyo y rescato aplicaciones móviles en producción. Mi especialidad es migrar bases de código nativas legacy a Flutter sin detener la entrega de funcionalidades, y construir los puentes nativos, la arquitectura y la documentación que permiten al equipo mantener el resultado después de la entrega. Más de cuatro años entregando para iOS, Android, web y escritorio."
+headline: "Ingeniero de software · Sistemas empresariales y desarrollo multiplataforma"
+summary: "Creo soluciones de software para retos empresariales complejos: sistemas robustos, escalables y pensados para crecer con el negocio."
+introduction: ["He desarrollado soluciones completas para el sector salud, puntos de venta y plataformas CRM utilizadas por miles de personas. Me involucro en todo el proceso, desde la arquitectura y el desarrollo hasta la puesta en producción.", "Mi especialidad es transformar sistemas legacy en soluciones multiplataforma: conservar lo que hace valioso al producto, mejorar su fluidez y construir una base que permita evolucionar sin frenar al negocio.", "Me mueve crear tecnología que tenga un impacto real en las personas. Si un sistema en el que trabajo hace su día un 1 % mejor, estamos avanzando hacia la meta. Esa convicción me impulsa a cuidar los detalles y dar siempre un poco más."]
 availability: "Disponible como contractor B2B (facturado) o vía Employer of Record."
 timezone: "Horario del Pacífico — solapamiento completo con la costa oeste de Estados Unidos."
 address: "Ensenada, Baja California, México"
 experience:
-  - role: "Flutter Developer / Mobile Lead"
-    company: "Plataforma de marketplace automotriz (bajo NDA)"
+  - caseStudy: automotive-marketplace
+    role: "Flutter Developer / Mobile Lead"
+    company: "MaxiPublica"
     period: "Mayo 2024 – Actualidad"
     mode: "Contrato (B2B) · Remoto"
     bullets:
@@ -19,7 +21,8 @@ experience:
       - "Incorporé a ingenieros nativos de Java y Objective-C a Flutter, escribiendo la documentación de arquitectura y las plantillas por feature que les permitieron entregar de forma autónoma."
       - "Ejecuté una auditoría de seguridad y su plan de remediación para la integración con un marketplace externo."
       - "Definí y estimé cada módulo tarea por tarea — interfaz, integración de API, ajustes específicos de plataforma, pruebas y liberación — contra fechas de entrega comprometidas."
-  - role: "Full-Stack Developer"
+  - caseStudy: databizz
+    role: "Full-Stack Developer"
     company: "DataBizz"
     period: "Abril 2026 – Agosto 2026"
     mode: "Contrato · Remoto"
@@ -29,7 +32,8 @@ experience:
       - "Implementé la capa nativa de terminal Android para el hardware de punto de venta."
       - "Empaqueté un instalador de Windows con scripts de despliegue automatizado para que personal no técnico completara la instalación en sitio."
       - "Entregué hardening del login, análisis del flujo de tickets y arquitectura de cuentas abiertas como trabajo documentado y revisable."
-  - role: "Full-Stack Developer"
+  - caseStudy: tech4good
+    role: "Full-Stack Developer"
     company: "Tech4Good Research Lab"
     period: "Enero 2024 – Junio 2025"
     mode: "Laboratorio de investigación"
@@ -37,7 +41,8 @@ experience:
       - "Entregué aplicaciones de complejidad media de extremo a extremo: Flutter con Clean Architecture en el front-end, .NET y MySQL en el back-end."
       - "Desplegué APIs productivas en Azure y configuré notificaciones push mediante Firebase."
       - "Cubrí diseño de base de datos, infraestructura cloud y gestión de liberaciones además del desarrollo."
-  - role: "Mobile Developer"
+  - caseStudy: fraktalweb
+    role: "Mobile Developer"
     company: "Fraktalweb Agency"
     period: "Julio 2022 – Enero 2024"
     mode: "Freelance"
@@ -45,19 +50,30 @@ experience:
       - "Desarrollé aplicaciones móviles para clientes de agencia en Flutter y React Native."
       - "Me enfoqué en interfaces responsivas y animadas, usando Provider (Flutter) y Redux (React Native) para una gestión de estado confiable."
 skills:
-  - category: "Mobile"
-    items: ["Flutter", "Dart", "React Native", "iOS", "Android", "Multiplataforma (móvil, web, escritorio)"]
-  - category: "Nativo"
-    items: ["Java", "Kotlin", "Objective-C", "Platform Channels", "Puentes nativos personalizados"]
-  - category: "Arquitectura"
-    items: ["Clean Architecture", "BLoC", "Cubit", "Provider", "Redux", "Inyección de dependencias"]
-  - category: "Backend"
-    items: [".NET", "Dart (Shelf)", "Node.js", "MySQL", "APIs REST"]
-  - category: "Cloud y herramientas"
-    items: ["Azure", "Firebase", "AWS CodeCommit", "Git"]
-  - category: "Especialidades"
-    items: ["Migración legacy a Flutter", "Optimización de rendimiento", "Auditoría de seguridad", "Documentación de arquitectura", "Estimación a nivel de tarea", "Habilitación de desarrolladores"]
-education: "Ingeniería en Software y Tecnologías Emergentes — Universidad Autónoma de Baja California"
+  - "Desarrollo multiplataforma"
+  - "Modernización de sistemas legacy"
+  - "Arquitectura de software"
+  - "Ingeniería cloud"
+education:
+  - title: "Ingeniería en Software y Tecnologías Emergentes"
+    institution: "Universidad Autónoma de Baja California"
+    period: "2021–2025"
+    achievements: []
+  - title: "Concurso de emprendimiento CIMATANK"
+    institution: "Universidad Autónoma de Baja California"
+    period: "2024"
+    achievements:
+      - title: "Primer lugar"
+        description: "División de Soluciones Tecnológicas"
+  - title: "Técnico en Programación"
+    institution: "CBTis 41"
+    achievements: []
+  - title: "Primer autor de un artículo internacional"
+    institution: "ReCIBE"
+    period: "2024"
+    description: "Validación de Emotions&Care: una aplicación móvil para apoyar la salud mental de estudiantes universitarios. Investigación desarrollada junto a un equipo multidisciplinario."
+    url: "https://recibe.cucei.udg.mx/index.php/ReCIBE/article/view/367"
+    achievements: []
 certifications:
   - "Flutter — verificado por Talently"
   - "React Native — verificado por Talently"
